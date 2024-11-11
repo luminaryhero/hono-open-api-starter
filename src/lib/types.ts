@@ -1,12 +1,10 @@
+import type { RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
 
-export interface AppEnv<T> {
-  Bindings: T;
+export interface AppEnv {
   Variables: {
     logger: PinoLogger;
   };
 }
 
-export interface BaseEnv {
-  NODE_ENV: "development" | "production" | "test";
-}
+export type AppRouteHandler<T extends RouteConfig> = RouteHandler<T, AppEnv>;
