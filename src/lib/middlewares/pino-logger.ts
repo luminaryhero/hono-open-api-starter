@@ -1,59 +1,57 @@
-import { pinoLogger as logger } from "hono-pino";
-import pino from "pino";
-import pretty from "pino-pretty";
 import dayjs from "dayjs";
+import { pinoLogger as logger } from "hono-pino";
 import _ from "lodash";
+import pino from "pino";
 
 import env from "@/env";
 
-const TODAY = dayjs().format('YYYY-MM-DD');
+const TODAY = dayjs().format("YYYY-MM-DD");
 
 const prettyTransport = pino.transport(
   {
-    target: 'pino-pretty',
-    level: 'info',
+    target: "pino-pretty",
+    level: "info",
     options: {
-      translateTime: 'yyyy-mm-dd HH:MM:ss',
-      colorize: true
+      translateTime: "yyyy-mm-dd HH:MM:ss",
+      colorize: true,
     },
-  }
+  },
 );
-
 
 const fileTransport = pino.transport({
   targets: [
     {
-      target: 'pino/file',
-      level: 'info',
+      target: "pino/file",
+      level: "info",
       options: {
-        destination: `./logs/${TODAY}-info`
+        destination: `./logs/${TODAY}-info`,
       },
     },
     {
-      target: 'pino/file',
-      level: 'error',
+      target: "pino/file",
+      level: "error",
       options: {
         destination: `./logs/${TODAY}-error`,
       },
     },
-  ]
+  ],
 });
 
 export function pinoLogger() {
   return logger({
-    pino: pino(env.NODE_ENV === 'development' ? prettyTransport : fileTransport),
+    pino: pino(env.NODE_ENV === "development" ? prettyTransport : fileTransport),
     http: {
       reqId: () => crypto.randomUUID(),
-      onReqBindings: (c) => ({
+      onReqBindings: c => ({
         req: {
           url: c.req.path,
           method: c.req.method,
           headers: _.pickBy(
             c.req.header(),
-            (value, key) => _.startsWith(key, "x-")
+            (value, key) => _.startsWith(key, "x-"),
           ),
-        }
-      })
+        },
+      }),
     },
   });
 }
