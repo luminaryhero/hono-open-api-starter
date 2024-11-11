@@ -1,17 +1,13 @@
-import type { PinoLogger } from "hono-pino";
-
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { notFound, onError } from "stoker/middlewares";
 
+import type { AppEnv } from "@/lib/types";
+
+import { configureOpenAPI } from "@/lib/core/configure-openapi";
 import { pinoLogger } from "@/lib/middlewares/pino-logger";
 
-interface AppEnv {
-  Variables: {
-    logger: PinoLogger;
-  };
-}
-
 const app = new OpenAPIHono<AppEnv>();
+configureOpenAPI(app);
 
 app.onError(onError);
 app.notFound(notFound);
@@ -44,14 +40,6 @@ app.openapi(route, (c) => {
 app.get("/error", (c) => {
   c.var.logger.error("error log");
   throw new Error("Oh No!");
-});
-
-app.doc("/doc", {
-  openapi: "3.0.0",
-  info: {
-    version: "1.0.0",
-    title: "My API",
-  },
 });
 
 export default app;
