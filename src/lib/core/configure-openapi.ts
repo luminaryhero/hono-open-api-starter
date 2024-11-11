@@ -25,6 +25,12 @@ export function configureOpenAPI(app: OpenAPIHono<AppEnv>) {
         targetKey: "javascript",
         clientKey: "fetch",
       },
+      servers: [
+        {
+          url: "http://localhost:3000/",
+          // description: "development env address",
+        },
+      ],
     }),
   );
 }
