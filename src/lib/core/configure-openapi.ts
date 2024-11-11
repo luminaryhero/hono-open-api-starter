@@ -2,9 +2,17 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import { apiReference } from "@scalar/hono-api-reference";
 
-import type { AppEnv } from "../types";
-
-export function configureOpenAPI(app: OpenAPIHono<AppEnv>) {
+/**
+ * Configures the OpenAPI documentation for the provided Hono app instance.
+ *
+ * Sets up the OpenAPI document at the "/doc" endpoint with basic information
+ * such as version and title. Additionally, it registers a route to serve the
+ * API reference page at the "/reference" endpoint with a specified theme,
+ * layout, and client settings.
+ *
+ * @param app - The Hono app instance to configure OpenAPI documentation for.
+ */
+export function configureOpenAPI(app: OpenAPIHono) {
   app.doc("/doc", {
     openapi: "3.0.0",
     info: {
@@ -28,7 +36,6 @@ export function configureOpenAPI(app: OpenAPIHono<AppEnv>) {
       servers: [
         {
           url: "http://localhost:3000/",
-          // description: "development env address",
         },
       ],
     }),

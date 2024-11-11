@@ -13,4 +13,6 @@ const envSchema = z.object({
 // eslint-disable-next-line node/no-process-env
 const env = envSchema.parse(process.env);
 
+export type Env = z.infer<typeof envSchema>;
+
 export default env;

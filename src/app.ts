@@ -1,18 +1,14 @@
 import { configureOpenAPI } from "@/lib/core/configure-openapi";
 
 import { createApp } from "./lib/core/create-app";
-import index from "./routes/index.route";
-import task from "./routes/task.route";
-
-const routes = [
-  index,
-  task,
-];
+import { registerLogger } from "./lib/core/register-logger";
+import { registerRouter } from "./lib/core/register-router";
+import routers from "./routers";
 
 const app = createApp();
 configureOpenAPI(app);
-
-routes.forEach(route => app.route("/api", route));
+registerLogger(app);
+registerRouter(app, routers);
 
 app.get("/error", (c) => {
   c.var.logger.error("error log");

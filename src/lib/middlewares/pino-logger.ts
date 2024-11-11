@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { pinoLogger as logger } from "hono-pino";
+import { pinoLogger } from "hono-pino";
 import _ from "lodash";
 import pino, { type Level } from "pino";
 
@@ -7,6 +7,8 @@ import env from "@/env";
 
 const TODAY = dayjs().format("YYYY-MM-DD");
 const TIME_STAMP = dayjs().format("YYYY-MM-DD HH:mm:ss");
+const LOG_LEVEL = env.LOG_LEVEL || "info";
+const NODE_ENV = env.NODE_ENV || "development";
 
 function createPrettyTransport(level: Level) {
   return pino.transport({
@@ -30,17 +32,17 @@ function createFileTransport(level: Level) {
   );
 }
 
-export function pinoLogger() {
-  return logger({
+export function createLogger() {
+  return pinoLogger({
     pino: pino({
-      level: env.LOG_LEVEL,
+      level: LOG_LEVEL,
       formatters: {
         level: label => ({ level: label }),
       },
       timestamp: () => TIME_STAMP,
-    }, env.NODE_ENV === "development"
-      ? createPrettyTransport(env.LOG_LEVEL)
-      : createFileTransport(env.LOG_LEVEL)),
+    }, NODE_ENV === "development"
+      ? createPrettyTransport(LOG_LEVEL)
+      : createFileTransport(LOG_LEVEL)),
     http: {
       reqId: () => crypto.randomUUID(),
       onReqBindings: c => ({

@@ -1,8 +1,12 @@
-import type { Env } from "hono";
 import type { PinoLogger } from "hono-pino";
 
-export interface AppEnv extends Env {
+export interface AppEnv<T> {
+  Bindings: T;
   Variables: {
     logger: PinoLogger;
   };
+}
+
+export interface BaseEnv {
+  NODE_ENV: "development" | "production" | "test";
 }
