@@ -1,11 +1,21 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { notFound, onError } from 'stoker/middlewares';
+import { pinoLogger } from '@/lib/middlewares/pino-logger';
+import type { PinoLogger } from 'hono-pino';
 
 
-const app = new OpenAPIHono();
+type AppEnv = {
+  Variables: {
+    logger: PinoLogger
+  }
+}
+
+const app = new OpenAPIHono<AppEnv>();
 
 app.onError(onError);
 app.notFound(notFound)
+
+app.use(pinoLogger());
 
 const route = createRoute({
   method: 'get',
@@ -13,8 +23,10 @@ const route = createRoute({
   responses: {
     200: {
       content: {
-        'text/plain': {
-          schema: z.string(),
+        'application/json': {
+          schema: z.object({
+            message: z.string(),
+          })
         },
       },
       description: 'index Api',
@@ -23,10 +35,13 @@ const route = createRoute({
 })
 
 app.openapi(route, (c) => {
-  return c.text("Hello Hono!");
+  return c.json({
+    message: 'Hello Hono!',
+  });
 })
 
 app.get('/error', (c) => {
+  c.var.logger.error('error log');
   throw new Error('Oh No!');
 })
 
