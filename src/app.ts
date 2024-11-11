@@ -1,18 +1,11 @@
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { notFound, onError } from "stoker/middlewares";
-
-import type { AppEnv } from "@/lib/types";
+import { createRoute, z } from "@hono/zod-openapi";
 
 import { configureOpenAPI } from "@/lib/core/configure-openapi";
-import { pinoLogger } from "@/lib/middlewares/pino-logger";
 
-const app = new OpenAPIHono<AppEnv>();
+import { createApp } from "./lib/core/create-app";
+
+const app = createApp();
 configureOpenAPI(app);
-
-app.onError(onError);
-app.notFound(notFound);
-
-app.use(pinoLogger());
 
 const route = createRoute({
   method: "get",

@@ -1,45 +1,46 @@
 import dayjs from "dayjs";
 import { pinoLogger as logger } from "hono-pino";
 import _ from "lodash";
-import pino from "pino";
+import pino, { type Level } from "pino";
 
 import env from "@/env";
 
 const TODAY = dayjs().format("YYYY-MM-DD");
+const TIME_STAMP = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-const prettyTransport = pino.transport(
-  {
+function createPrettyTransport(level: Level) {
+  return pino.transport({
+    level,
     target: "pino-pretty",
-    level: "info",
     options: {
       translateTime: "yyyy-mm-dd HH:MM:ss",
-      colorize: true,
     },
-  },
-);
+  });
+}
 
-const fileTransport = pino.transport({
-  targets: [
+function createFileTransport(level: Level) {
+  return pino.transport(
     {
+      level,
       target: "pino/file",
-      level: "info",
       options: {
-        destination: `./logs/${TODAY}-info`,
+        destination: `./logs/${TODAY}-${level}`,
       },
     },
-    {
-      target: "pino/file",
-      level: "error",
-      options: {
-        destination: `./logs/${TODAY}-error`,
-      },
-    },
-  ],
-});
+  );
+}
 
 export function pinoLogger() {
   return logger({
-    pino: pino(env.NODE_ENV === "development" ? prettyTransport : fileTransport),
+    pino: pino({
+      level: env.LOG_LEVEL,
+      formatters: {
+        level: label => ({ level: label }),
+      },
+      timestamp: () => TIME_STAMP,
+    }, env.NODE_ENV === "development"
+      ? createPrettyTransport(env.LOG_LEVEL)
+      : createFileTransport(env.LOG_LEVEL)),
     http: {
       reqId: () => crypto.randomUUID(),
       onReqBindings: c => ({

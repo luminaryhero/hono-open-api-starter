@@ -21,6 +21,10 @@ export function configureOpenAPI(app: OpenAPIHono<AppEnv>) {
       spec: {
         url: "/doc",
       },
+      defaultHttpClient: {
+        targetKey: "javascript",
+        clientKey: "fetch",
+      },
     }),
   );
 }
