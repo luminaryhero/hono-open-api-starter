@@ -4,6 +4,7 @@ import { jsonContent } from "stoker/openapi/helpers";
 import { IdParamsSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
+import { taskCreateSchema, taskListSchema, taskUpdateSchema } from "@/db/schema";
 import { taskCreateHandler, taskDeleteHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
 import { createOpenAPIRouter } from "@/lib/core/create-app";
 
@@ -13,12 +14,7 @@ const taskListRoute = createRoute({
   path: "/task",
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      z.array(
-        z.object({
-          name: z.string(),
-          done: z.boolean(),
-        }),
-      ),
+      taskListSchema,
       "Task list Api",
     ),
   },
@@ -28,13 +24,15 @@ const taskCreateRoute = createRoute({
   tags: ["Task"],
   method: "post",
   path: "/task",
+  request: {
+    body: jsonContent(
+      taskCreateSchema,
+      "Task Create Api body",
+    ),
+  },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        done: z.boolean(),
-      }),
+      taskCreateSchema,
       "Task Create Api",
     ),
   },
@@ -46,6 +44,10 @@ const taskUpdateRoute = createRoute({
   path: "/task/{id}",
   request: {
     params: IdParamsSchema,
+    body: jsonContent(
+      taskUpdateSchema,
+      "Task Update Api body",
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
