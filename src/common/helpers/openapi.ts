@@ -8,7 +8,7 @@ const defaultHook: Hook<any, any, any, any> = async (result, c) => {
       {
         code: -1,
         data: null,
-        message: result.error.message,
+        message: result.error?.issues[0]?.message || "validation error",
       },
       UNPROCESSABLE_ENTITY,
     );
