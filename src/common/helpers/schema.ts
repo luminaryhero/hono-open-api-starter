@@ -34,7 +34,19 @@ export function jsonResponse<
   };
 }
 
-export const pageParamSchema = z.object({
-  page: z.coerce.number().default(1).optional(),
-  pageSize: z.coerce.number().default(10).optional(),
-});
+export function jsonPageResponse<
+  T extends ZodSchema,
+>(schema: T, description: string = "") {
+  return {
+    content: {
+      "application/json": {
+        schema: z.object({
+          code: z.number(),
+          data: schema,
+          message: z.string(),
+        }),
+      },
+    },
+    description,
+  };
+}

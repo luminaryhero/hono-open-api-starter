@@ -1,15 +1,16 @@
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { IdParamsSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent, jsonResponse } from "@/common/helpers/schema";
+import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
+import IdParamsSchema from "@/common/schemas/id-params";
+import PageParamsSchema from "@/common/schemas/page-params";
 import { TaskSchema } from "@/db/schema";
 import { taskCreateHandler, taskDeleteHandler, taskGetHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
 
 const taskGetRoute = createRoute({
-  description: "查找任务",
+
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
@@ -26,16 +27,11 @@ const taskListRoute = createRoute({
   method: "get",
   path: "/task",
   request: {
-    params: z.object({
-      page: z.number().default(1).optional(),
-      pageSize: z.number().default(10).optional(),
-    }),
+    // params: PageParamsSchema,
+    query: PageParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonResponse(z.object({
-      meta: z.object({ total: z.number(), page: z.number(), pageSize: z.number() }),
-      items: z.array(TaskSchema),
-    })),
+    [HttpStatusCodes.OK]: jsonPageResponse(TaskSchema),
   },
 });
 

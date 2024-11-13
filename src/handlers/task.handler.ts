@@ -19,21 +19,14 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
 };
 
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
-  const { page = 1, pageSize = 10 } = await c.req.valid("param");
+  const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
-  const rows = await db.select().from(taskTable);
-
-  // 响应数据转换
-  const data = rows.map(task => ({
-    ...task,
-    createdAt: _.isNil(task.createdAt) ? "" : dayjs(task.createdAt).format("YYYY-MM-DD HH:mm:ss"),
-    updatedAt: _.isNil(task.updatedAt) ? "" : dayjs(task.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
-  }));
+  const task = await db.select().from(taskTable);
 
   // 数据分页
-  const result = paginate(data, page, pageSize);
+  const data = paginate(task, page, pageSize);
 
-  return successResponse(c, result);
+  return successResponse(c, data);
 };
 
 export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => {

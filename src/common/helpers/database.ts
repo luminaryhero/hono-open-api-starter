@@ -1,4 +1,5 @@
 import type { Context } from "hono";
+import type { HandlerResponse } from "hono/types";
 
 /**
  * 分页
