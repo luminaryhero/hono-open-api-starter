@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import { pinoLogger } from "hono-pino";
 import _ from "lodash";
 import pino, { type Level } from "pino";
-import pretty from "pino-pretty";
 
 import env from "@/env";
 

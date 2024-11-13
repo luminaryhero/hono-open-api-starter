@@ -1,14 +1,13 @@
 import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 import _ from "lodash";
-import { z } from "zod";
 
 import type { AppRouteHandler } from "@/lib/types";
 import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task.route";
 
 import db from "@/db";
-import { baseSchema, taskListSchema, taskTable, type TaskTable } from "@/db/schema";
-import { paginate } from "@/lib/helpers/database.helper";
+import { taskTable } from "@/db/schema";
+import { paginate } from "@/lib/helpers/database";
 
 export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
@@ -16,11 +15,7 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   if (_.isNil(task))
     throw new Error(`Task not found,id = ${id}`);
 
-  return c.json({
-    ...task,
-    createdAt: dayjs(task.createdAt).format("YYYY-MM-DD HH:mm:ss"),
-    updatedAt: dayjs(task.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
-  });
+  return c.json(task);
 };
 
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
