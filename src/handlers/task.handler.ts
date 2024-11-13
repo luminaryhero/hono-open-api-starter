@@ -2,12 +2,12 @@ import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 import _ from "lodash";
 
-import type { AppRouteHandler } from "@/lib/types";
+import type { AppRouteHandler } from "@/common/types";
 import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task.route";
 
+import { paginate } from "@/common/helpers/database";
 import db from "@/db";
 import { taskTable } from "@/db/schema";
-import { paginate } from "@/lib/helpers/database";
 
 export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");

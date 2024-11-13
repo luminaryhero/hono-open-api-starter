@@ -3,7 +3,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent } from "stoker/openapi/helpers";
 import { z } from "zod";
 
-import { createOpenAPIRouter } from "@/lib/core/create-app";
+import { createOpenAPIRouter } from "@/common/core/create-app";
 
 const route = createRoute({
   tags: ["Index"],

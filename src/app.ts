@@ -1,4 +1,4 @@
-import { configureOpenAPI } from "@/lib/core/configure-openapi";
+import { configureOpenAPI } from "@/common/core/configure-openapi";
 
 import { createApp } from "./lib/core/create-app";
 import { registerLogger } from "./lib/core/register-logger";
