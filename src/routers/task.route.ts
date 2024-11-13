@@ -1,14 +1,15 @@
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent } from "stoker/openapi/helpers";
 import { IdParamsSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
-import { taskCreateSchema, taskGetSchema, taskListSchema, taskUpdateSchema } from "@/db/schema";
+import { TaskSchema } from "@/db/schema";
 import { taskCreateHandler, taskDeleteHandler, taskGetHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
 import { createOpenAPIRouter } from "@/lib/core/create-app";
+import { jsonContent } from "@/lib/helpers/schema";
 
 const taskGetRoute = createRoute({
+  description: "查找任务",
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
@@ -16,10 +17,7 @@ const taskGetRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      taskGetSchema,
-      "Task Get Api",
-    ),
+    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
   },
 });
 
@@ -34,10 +32,10 @@ const taskListRoute = createRoute({
     }),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      taskListSchema,
-      "Task list Api",
-    ),
+    [HttpStatusCodes.OK]: jsonContent(z.object({
+      meta: z.object({ total: z.number(), page: z.number(), pageSize: z.number() }),
+      items: z.array(TaskSchema),
+    })),
   },
 });
 
@@ -47,15 +45,11 @@ const taskCreateRoute = createRoute({
   path: "/task",
   request: {
     body: jsonContent(
-      taskCreateSchema,
-      "Task Create Api body",
+      TaskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      taskCreateSchema,
-      "Task Create Api",
-    ),
+    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
   },
 });
 
@@ -66,19 +60,11 @@ const taskUpdateRoute = createRoute({
   request: {
     params: IdParamsSchema,
     body: jsonContent(
-      taskUpdateSchema,
-      "Task Update Api body",
+      TaskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        done: z.boolean(),
-      }),
-      "Task Update Api",
-    ),
+    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
   },
 });
 
@@ -90,14 +76,7 @@ const taskDeleteRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        done: z.boolean(),
-      }),
-      "Task Delete Api",
-    ),
+    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
   },
 });
 
