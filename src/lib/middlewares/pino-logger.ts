@@ -2,11 +2,12 @@ import dayjs from "dayjs";
 import { pinoLogger } from "hono-pino";
 import _ from "lodash";
 import pino, { type Level } from "pino";
+import pretty from "pino-pretty";
 
 import env from "@/env";
 
 const TODAY = dayjs().format("YYYY-MM-DD");
-const TIME_STAMP = dayjs().format("YYYY-MM-DD HH:mm:ss");
+// const TIME_STAMP = dayjs().format("YYYY-MM-DD HH:mm:ss");
 const LOG_LEVEL = env.LOG_LEVEL || "info";
 const NODE_ENV = env.NODE_ENV || "development";
 
@@ -39,10 +40,10 @@ export function createLogger() {
       formatters: {
         level: label => ({ level: label }),
       },
-      timestamp: () => TIME_STAMP,
-    }, NODE_ENV === "development"
-      ? createPrettyTransport(LOG_LEVEL)
-      : createFileTransport(LOG_LEVEL)),
+      // timestamp: () => TIME_STAMP,
+    }, NODE_ENV === "production"
+      ? createFileTransport(LOG_LEVEL)
+      : createPrettyTransport(LOG_LEVEL)),
     http: {
       reqId: () => crypto.randomUUID(),
       onReqBindings: c => ({
@@ -51,7 +52,7 @@ export function createLogger() {
           method: c.req.method,
           headers: _.pickBy(
             c.req.header(),
-            (value, key) => _.startsWith(key, "x-"),
+            (_value, key) => _.startsWith(key, "x-"),
           ),
         },
       }),

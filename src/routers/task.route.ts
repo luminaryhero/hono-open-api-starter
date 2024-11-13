@@ -4,14 +4,35 @@ import { jsonContent } from "stoker/openapi/helpers";
 import { IdParamsSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
-import { taskCreateSchema, taskListSchema, taskUpdateSchema } from "@/db/schema";
-import { taskCreateHandler, taskDeleteHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
+import { taskCreateSchema, taskGetSchema, taskListSchema, taskUpdateSchema } from "@/db/schema";
+import { taskCreateHandler, taskDeleteHandler, taskGetHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
 import { createOpenAPIRouter } from "@/lib/core/create-app";
+
+const taskGetRoute = createRoute({
+  tags: ["Task"],
+  method: "get",
+  path: "/task/{id}",
+  request: {
+    params: IdParamsSchema,
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      taskGetSchema,
+      "Task Get Api",
+    ),
+  },
+});
 
 const taskListRoute = createRoute({
   tags: ["Task"],
   method: "get",
   path: "/task",
+  request: {
+    params: z.object({
+      page: z.number().default(1).optional(),
+      pageSize: z.number().default(10).optional(),
+    }),
+  },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       taskListSchema,
@@ -71,7 +92,9 @@ const taskDeleteRoute = createRoute({
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       z.object({
-        message: z.string(),
+        id: z.number(),
+        name: z.string(),
+        done: z.boolean(),
       }),
       "Task Delete Api",
     ),
@@ -80,11 +103,13 @@ const taskDeleteRoute = createRoute({
 
 const router
   = createOpenAPIRouter()
+    .openapi(taskGetRoute, taskGetHandler)
     .openapi(taskListRoute, taskListHandler)
     .openapi(taskCreateRoute, taskCreateHandler)
     .openapi(taskUpdateRoute, taskUpdateHandler)
     .openapi(taskDeleteRoute, taskDeleteHandler);
 
+export type TaskGetRoute = typeof taskGetRoute;
 export type TaskListRoute = typeof taskListRoute;
 export type TaskCreateRoute = typeof taskCreateRoute;
 export type TaskUpdateRoute = typeof taskUpdateRoute;
