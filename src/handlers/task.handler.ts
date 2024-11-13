@@ -5,7 +5,7 @@ import _ from "lodash";
 import type { AppRouteHandler } from "@/common/types";
 import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task.route";
 
-import { paginate } from "@/common/helpers/database";
+import { paginate, successResponse } from "@/common/helpers/database";
 import db from "@/db";
 import { taskTable } from "@/db/schema";
 
@@ -15,7 +15,7 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   if (_.isNil(task))
     throw new Error(`Task not found,id = ${id}`);
 
-  return c.json(task);
+  return successResponse(c, task);
 };
 
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
@@ -33,7 +33,7 @@ export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
   // 数据分页
   const result = paginate(data, page, pageSize);
 
-  return c.json(result);
+  return successResponse(c, result);
 };
 
 export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => {
@@ -43,7 +43,7 @@ export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => 
   if (_.isNil(createdTask))
     throw new Error("Task create failed");
 
-  return c.json(createdTask);
+  return successResponse(c, createdTask);
 };
 
 export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => {
@@ -53,7 +53,7 @@ export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => 
   if (_.isNil(updatedTask))
     throw new Error(`Task not found,id = ${id}`);
 
-  return c.json(updatedTask);
+  return successResponse(c, updatedTask);
 };
 
 export const taskDeleteHandler: AppRouteHandler<TaskDeleteRoute> = async (c) => {
@@ -62,5 +62,5 @@ export const taskDeleteHandler: AppRouteHandler<TaskDeleteRoute> = async (c) => 
   if (_.isNil(deletedTask))
     throw new Error(`Task not found,id = ${id}`);
 
-  return c.json(deletedTask);
+  return successResponse(c, deletedTask);
 };

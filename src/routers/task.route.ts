@@ -4,7 +4,7 @@ import { IdParamsSchema } from "stoker/openapi/schemas";
 import { z } from "zod";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent } from "@/common/helpers/schema";
+import { jsonContent, jsonResponse } from "@/common/helpers/schema";
 import { TaskSchema } from "@/db/schema";
 import { taskCreateHandler, taskDeleteHandler, taskGetHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
 
@@ -17,7 +17,7 @@ const taskGetRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
   },
 });
 
@@ -32,7 +32,7 @@ const taskListRoute = createRoute({
     }),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(z.object({
+    [HttpStatusCodes.OK]: jsonResponse(z.object({
       meta: z.object({ total: z.number(), page: z.number(), pageSize: z.number() }),
       items: z.array(TaskSchema),
     })),
@@ -49,7 +49,7 @@ const taskCreateRoute = createRoute({
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
   },
 });
 
@@ -64,7 +64,7 @@ const taskUpdateRoute = createRoute({
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
   },
 });
 
@@ -76,7 +76,7 @@ const taskDeleteRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
   },
 });
 

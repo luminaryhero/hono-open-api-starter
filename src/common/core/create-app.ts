@@ -1,6 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { notFound, onError } from "stoker/middlewares";
-import { defaultHook } from "stoker/openapi";
+
+import defaultHook from "../helpers/openapi";
+import notFound from "../middlewares/not-found";
+import onError from "../middlewares/on-error";
 
 /**
  * Creates a new OpenAPIHono router with the default hook configured.
@@ -14,7 +16,7 @@ import { defaultHook } from "stoker/openapi";
  */
 export function createOpenAPIRouter() {
   return new OpenAPIHono({
-    strict: false,
+    strict: true,
     defaultHook,
   });
 }

@@ -1,8 +1,8 @@
 import { configureOpenAPI } from "@/common/core/configure-openapi";
+import { createApp } from "@/common/core/create-app";
+import { registerLogger } from "@/common/core/register-logger";
+import { registerRouter } from "@/common/core/register-router";
 
-import { createApp } from "./lib/core/create-app";
-import { registerLogger } from "./lib/core/register-logger";
-import { registerRouter } from "./lib/core/register-router";
 import routers from "./routers";
 
 const app = createApp();
