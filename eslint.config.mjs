@@ -21,5 +21,6 @@ export default antfu({
       case: "kebabCase",
       ignore: ["README.md"],
     }],
+    "jsdoc/require-returns-description": ["off"],
   },
 });

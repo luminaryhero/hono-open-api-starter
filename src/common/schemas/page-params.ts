@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const pageParamSchema = z.object({
-  page: z.string().transform(Number).pipe(z.coerce.number()).default("1").optional().openapi({
+  page: z.string().transform(Number).pipe(z.coerce.number().min(1)).default("1").optional().openapi({
     param: {
       name: "page",
       in: "query",
@@ -9,7 +9,7 @@ const pageParamSchema = z.object({
       description: "页码",
     },
   }),
-  pageSize: z.string().transform(Number).pipe(z.coerce.number()).optional().default("10").openapi({
+  pageSize: z.string().transform(Number).pipe(z.coerce.number().min(1)).optional().default("10").openapi({
     param: {
       name: "pageSize",
       in: "query",

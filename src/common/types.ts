@@ -28,3 +28,15 @@ export interface R {
   data: any;
   message: string;
 }
+
+/**
+ * 分页响应数据格式接口
+ */
+export interface PR {
+  code: number;
+  data: {
+    meta: object;
+    items: any[];
+  };
+  message: string;
+}

@@ -1,6 +1,5 @@
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { z } from "zod";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
