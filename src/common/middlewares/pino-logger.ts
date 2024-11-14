@@ -1,6 +1,7 @@
 import { pinoLogger } from "hono-pino";
 import _ from "lodash";
 import pino, { type Level } from "pino";
+import pretty from "pino-pretty";
 
 import env from "@/env";
 
@@ -9,23 +10,13 @@ import { format, now } from "../helpers/date";
 const LOG_LEVEL = env.LOG_LEVEL || "info";
 const NODE_ENV = env.NODE_ENV || "development";
 
-function createPrettyTransport(level: Level) {
-  return pino.transport({
-    level,
-    target: "pino-pretty",
-    options: {
-      translateTime: "yyyy-mm-dd HH:MM:ss",
-    },
-  });
-}
-
 function createFileTransport(level: Level) {
   return pino.transport(
     {
       level,
       target: "pino/file",
       options: {
-        destination: `./logs/${format(now())}-${level}`,
+        destination: `./logs/${format(now(), "YYYY-MM-DD")}-${level}`,
       },
     },
   );
@@ -38,10 +29,9 @@ export function createLogger() {
       formatters: {
         level: label => ({ level: label }),
       },
-      // timestamp: () => TIME_STAMP,
     }, NODE_ENV === "production"
       ? createFileTransport(LOG_LEVEL)
-      : createPrettyTransport(LOG_LEVEL)),
+      : pretty({ colorize: true })),
     http: {
       reqId: () => crypto.randomUUID(),
       onReqBindings: c => ({
