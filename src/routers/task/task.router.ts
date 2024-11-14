@@ -5,8 +5,8 @@ import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/sc
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
-import { taskSchema } from "@/db/schema";
-import * as taskHandler from "@/handlers/task";
+import { taskSchema } from "@/db/schemas/task";
+import * as taskHandler from "@/routers/task/task.handler";
 
 const taskGetRoute = createRoute({
   tags: ["Task"],
@@ -52,9 +52,7 @@ const taskUpdateRoute = createRoute({
   path: "/task/{id}",
   request: {
     params: IdParamsSchema,
-    body: jsonContent(
-      taskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
-    ),
+    body: jsonContent(taskSchema.omit({ id: true, createdAt: true, updatedAt: true }).partial()),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(taskSchema),

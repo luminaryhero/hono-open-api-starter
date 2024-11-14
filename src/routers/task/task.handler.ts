@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
-import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task";
+import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task/task.router";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
 import db from "@/db";
-import { taskTable } from "@/db/schema";
+import { taskTable } from "@/db/schemas/task";
 
 /**
  * Get a task by id
@@ -52,6 +52,7 @@ export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => 
 export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const body = await c.req.valid("json");
+
   const updatedTask = await db.update(taskTable).set(body).where(eq(taskTable.id, id)).returning().get();
 
   nilThrowError(updatedTask, `The task not found,id = ${id}`);

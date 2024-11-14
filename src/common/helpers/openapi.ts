@@ -13,11 +13,14 @@ import { UNPROCESSABLE_ENTITY } from "../lib/http-status-codes";
  */
 const defaultHook: Hook<any, any, any, any> = async (result, c) => {
   if (!result.success) {
+    const message = `${result.error?.issues[0]?.message} - ${result.error?.issues[0]?.path[0]}`;
+    c.var.logger.error(message);
+
     return c.json(
       {
         code: -1,
         data: null,
-        message: result.error?.issues[0]?.message || "validation error",
+        message: message || "validation error",
       },
       UNPROCESSABLE_ENTITY,
     );
