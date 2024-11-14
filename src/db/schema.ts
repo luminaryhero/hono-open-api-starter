@@ -13,8 +13,8 @@ export const taskSchema = z.object({
   id: z.number(),
   name: z.string(),
   done: z.boolean(),
-  createdAt: z.date().or(z.null()),
-  updatedAt: z.date().or(z.null()),
+  createdAt: z.string().nullable(),
+  updatedAt: z.string().nullable(),
 });
 
 export type TaskTable = typeof taskTable;
