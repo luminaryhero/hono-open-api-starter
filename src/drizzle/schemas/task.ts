@@ -13,7 +13,7 @@ export const taskTable = pgTable("task_table", {
 
 export const taskSchema = z.object({
   id: z.number(),
-  name: z.string().min(1).max(50),
+  name: z.string().min(1).max(20),
   done: z.boolean(),
   createdAt: z.string().nullable(),
   updatedAt: z.string().nullable(),
