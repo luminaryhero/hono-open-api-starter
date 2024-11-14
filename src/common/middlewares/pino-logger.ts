@@ -1,5 +1,4 @@
 import { pinoLogger } from "hono-pino";
-import _ from "lodash";
 import pino, { type Level } from "pino";
 import pretty from "pino-pretty";
 
@@ -31,19 +30,9 @@ export function createLogger() {
       },
     }, NODE_ENV === "production"
       ? createFileTransport(LOG_LEVEL)
-      : pretty({ colorize: true })),
+      : pretty()),
     http: {
       reqId: () => crypto.randomUUID(),
-      onReqBindings: c => ({
-        req: {
-          url: c.req.path,
-          method: c.req.method,
-          headers: _.pickBy(
-            c.req.header(),
-            (_value, key) => _.startsWith(key, "x-"),
-          ),
-        },
-      }),
     },
   });
 }

@@ -1,4 +1,4 @@
-import { boolean, date, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
 import { now } from "@/common/helpers/date";

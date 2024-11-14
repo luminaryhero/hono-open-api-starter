@@ -12,8 +12,10 @@ import { taskTable } from "@/drizzle/schemas/task";
  */
 export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
-  const result = await db.select().from(taskTable).where(eq(taskTable.id, id)).limit(1);
-  const data = result[0];
+
+  const data = await db.query.taskTable.findFirst({
+    where: eq(taskTable.id, id),
+  });
 
   nilThrowError(data, `The task not found,id = ${id}`);
 
@@ -26,7 +28,10 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
-  const result = (await db.select().from(taskTable)).sort((a, b) => a.id - b.id);
+  const result = await db.query.taskTable.findMany({
+    where: eq(taskTable.done, true),
+    orderBy: (taskTable, { asc }) => asc(taskTable.id),
+  });
 
   // 数据分页
   const data = paginate(result, page, pageSize);
@@ -41,7 +46,6 @@ export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => 
   const body = await c.req.valid("json");
 
   const result = await db.insert(taskTable).values(body).returning();
-
   const data = result[0];
 
   nilThrowError(data, "The task create filed");

@@ -13,7 +13,6 @@
   "dependencies": {
     "@hono/node-server": "^1.13.5",
     "@hono/zod-openapi": "^0.17.0",
-    "@libsql/client": "^0.14.0",
     "@scalar/hono-api-reference": "^0.5.159",
     "@types/lodash": "^4.17.13",
     "dayjs": "^1.11.13",
