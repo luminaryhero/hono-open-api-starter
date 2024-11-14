@@ -31,8 +31,8 @@ export function configureOpenAPI(app: OpenAPIHono) {
       },
       hideDownloadButton: true,
       defaultHttpClient: {
-        targetKey: "javascript",
-        clientKey: "fetch",
+        targetKey: "shell",
+        clientKey: "curl",
       },
       servers: [
         {

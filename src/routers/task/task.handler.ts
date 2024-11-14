@@ -4,8 +4,8 @@ import type { AppRouteHandler } from "@/common/types";
 import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task/task.router";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
-import db from "@/db";
-import { taskTable } from "@/db/schemas/task";
+import db from "@/drizzle";
+import { taskTable } from "@/drizzle/schemas/task";
 
 /**
  * Get a task by id

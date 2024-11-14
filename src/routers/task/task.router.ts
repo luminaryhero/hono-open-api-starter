@@ -5,7 +5,7 @@ import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/sc
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
-import { taskSchema } from "@/db/schemas/task";
+import { taskSchema } from "@/drizzle/schemas/task";
 import * as taskHandler from "@/routers/task/task.handler";
 
 const taskGetRoute = createRoute({
