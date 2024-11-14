@@ -1,12 +1,11 @@
-import dayjs from "dayjs";
 import { pinoLogger } from "hono-pino";
 import _ from "lodash";
 import pino, { type Level } from "pino";
 
 import env from "@/env";
 
-const TODAY = dayjs().format("YYYY-MM-DD");
-// const TIME_STAMP = dayjs().format("YYYY-MM-DD HH:mm:ss");
+import { format, now } from "../helpers/date";
+
 const LOG_LEVEL = env.LOG_LEVEL || "info";
 const NODE_ENV = env.NODE_ENV || "development";
 
@@ -26,7 +25,7 @@ function createFileTransport(level: Level) {
       level,
       target: "pino/file",
       options: {
-        destination: `./logs/${TODAY}-${level}`,
+        destination: `./logs/${format(now())}-${level}`,
       },
     },
   );

@@ -1,12 +1,14 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { boolean, date, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-export const taskTable = sqliteTable("task_table", {
-  id: integer().primaryKey({ autoIncrement: true }),
+import { now } from "@/common/helpers/date";
+
+export const taskTable = pgTable("task_table", {
+  id: serial().primaryKey(),
   name: text().notNull().unique(),
-  done: integer({ mode: "boolean" }).notNull().default(false),
-  createdAt: integer({ mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer({ mode: "timestamp" }).$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
+  done: boolean().notNull().default(false),
+  createdAt: timestamp("created_at").$defaultFn(now),
+  updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
 });
 
 export const taskSchema = z.object({

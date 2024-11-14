@@ -12,11 +12,12 @@ import { taskTable } from "@/drizzle/schemas/task";
  */
 export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
-  const task = await db.select().from(taskTable).where(eq(taskTable.id, id)).limit(1).get();
+  const result = await db.select().from(taskTable).where(eq(taskTable.id, id)).limit(1);
+  const data = result[0];
 
-  nilThrowError(task, `The task not found,id = ${id}`);
+  nilThrowError(data, `The task not found,id = ${id}`);
 
-  return successResponse(c, task);
+  return successResponse(c, data);
 };
 
 /**
@@ -25,10 +26,10 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
-  const task = await db.select().from(taskTable);
+  const result = (await db.select().from(taskTable)).sort((a, b) => a.id - b.id);
 
   // 数据分页
-  const data = paginate(task, page, pageSize);
+  const data = paginate(result, page, pageSize);
 
   return successResponse(c, data);
 };
@@ -39,11 +40,13 @@ export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
 export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => {
   const body = await c.req.valid("json");
 
-  const createdTask = await db.insert(taskTable).values(body).returning().get();
+  const result = await db.insert(taskTable).values(body).returning();
 
-  nilThrowError(createdTask, "The task create filed");
+  const data = result[0];
 
-  return successResponse(c, createdTask);
+  nilThrowError(data, "The task create filed");
+
+  return successResponse(c, data);
 };
 
 /**
@@ -53,11 +56,13 @@ export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => 
   const { id } = await c.req.valid("param");
   const body = await c.req.valid("json");
 
-  const updatedTask = await db.update(taskTable).set(body).where(eq(taskTable.id, id)).returning().get();
+  const result = await db.update(taskTable).set(body).where(eq(taskTable.id, id)).returning();
 
-  nilThrowError(updatedTask, `The task not found,id = ${id}`);
+  const data = result[0];
 
-  return successResponse(c, updatedTask);
+  nilThrowError(data, `The task not found,id = ${id}`);
+
+  return successResponse(c, data);
 };
 
 /**
@@ -65,9 +70,10 @@ export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => 
  */
 export const taskDeleteHandler: AppRouteHandler<TaskDeleteRoute> = async (c) => {
   const { id } = await c.req.valid("param");
-  const deletedTask = await db.delete(taskTable).where(eq(taskTable.id, id)).returning().get();
+  const result = await db.delete(taskTable).where(eq(taskTable.id, id)).returning();
+  const data = result[0];
 
-  nilThrowError(deletedTask, `The task not found,id = ${id}`);
+  nilThrowError(data, `The task not found,id = ${id}`);
 
-  return successResponse(c, deletedTask);
+  return successResponse(c, data);
 };

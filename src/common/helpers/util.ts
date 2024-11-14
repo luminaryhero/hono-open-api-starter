@@ -1,7 +1,8 @@
 import type { Context } from "hono";
 
-import dayjs from "dayjs";
 import _ from "lodash";
+
+import { format } from "@/common/helpers/date";
 
 import type { PR, R } from "../types";
 
@@ -68,10 +69,10 @@ function serialize<T extends R | PR>(data: T): T {
 
     items = items.map((item: any) => {
       if (item.createdAt) {
-        item.createdAt = dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss");
+        item.createdAt = format(item.createdAt);
       }
       if (item.updatedAt) {
-        item.updatedAt = dayjs(item.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+        item.updatedAt = format(item.updatedAt);
       }
 
       item = _.omit(item, safeFields);
@@ -91,10 +92,10 @@ function serialize<T extends R | PR>(data: T): T {
     let item = data.data;
 
     if (item.createdAt) {
-      item.createdAt = dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss");
+      item.createdAt = format(item.createdAt);
     }
     if (item.updatedAt) {
-      item.updatedAt = dayjs(item.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+      item.updatedAt = format(item.updatedAt);
     }
 
     item = _.omit(item, safeFields);
