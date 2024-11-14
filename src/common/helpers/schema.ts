@@ -42,7 +42,14 @@ export function jsonPageResponse<
       "application/json": {
         schema: z.object({
           code: z.number(),
-          data: schema,
+          data: z.object({
+            meta: z.object({
+              total: z.number(),
+              page: z.number(),
+              pageSize: z.number(),
+            }),
+            items: z.array(schema),
+          }),
           message: z.string(),
         }),
       },

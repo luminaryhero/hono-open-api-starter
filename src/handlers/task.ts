@@ -1,12 +1,15 @@
 import { eq } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
-import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task.route";
+import type { TaskCreateRoute, TaskDeleteRoute, TaskGetRoute, TaskListRoute, TaskUpdateRoute } from "@/routers/task";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
 import db from "@/db";
 import { taskTable } from "@/db/schema";
 
+/**
+ * Get a task by id
+ */
 export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const task = await db.select().from(taskTable).where(eq(taskTable.id, id)).limit(1).get();
@@ -16,6 +19,9 @@ export const taskGetHandler: AppRouteHandler<TaskGetRoute> = async (c) => {
   return successResponse(c, task);
 };
 
+/**
+ * Get task list
+ */
 export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
@@ -27,6 +33,9 @@ export const taskListHandler: AppRouteHandler<TaskListRoute> = async (c) => {
   return successResponse(c, data);
 };
 
+/**
+ * Create a new task
+ */
 export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => {
   const body = await c.req.valid("json");
 
@@ -37,6 +46,9 @@ export const taskCreateHandler: AppRouteHandler<TaskCreateRoute> = async (c) => 
   return successResponse(c, createdTask);
 };
 
+/**
+ * Update a task
+ */
 export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const body = await c.req.valid("json");
@@ -47,6 +59,9 @@ export const taskUpdateHandler: AppRouteHandler<TaskUpdateRoute> = async (c) => 
   return successResponse(c, updatedTask);
 };
 
+/**
+ * Delete a task by id
+ */
 export const taskDeleteHandler: AppRouteHandler<TaskDeleteRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const deletedTask = await db.delete(taskTable).where(eq(taskTable.id, id)).returning().get();

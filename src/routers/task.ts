@@ -1,15 +1,14 @@
 import { createRoute } from "@hono/zod-openapi";
-import * as HttpStatusCodes from "stoker/http-status-codes";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
+import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
-import { TaskSchema } from "@/db/schema";
-import { taskCreateHandler, taskDeleteHandler, taskGetHandler, taskListHandler, taskUpdateHandler } from "@/handlers/task.handler";
+import { taskSchema } from "@/db/schema";
+import * as taskHandler from "@/handlers/task";
 
 const taskGetRoute = createRoute({
-
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
@@ -17,7 +16,7 @@ const taskGetRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(taskSchema),
   },
 });
 
@@ -26,11 +25,10 @@ const taskListRoute = createRoute({
   method: "get",
   path: "/task",
   request: {
-    // params: PageParamsSchema,
     query: PageParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonPageResponse(TaskSchema),
+    [HttpStatusCodes.OK]: jsonPageResponse(taskSchema),
   },
 });
 
@@ -40,11 +38,11 @@ const taskCreateRoute = createRoute({
   path: "/task",
   request: {
     body: jsonContent(
-      TaskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
+      taskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(taskSchema),
   },
 });
 
@@ -55,11 +53,11 @@ const taskUpdateRoute = createRoute({
   request: {
     params: IdParamsSchema,
     body: jsonContent(
-      TaskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
+      taskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
     ),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(taskSchema),
   },
 });
 
@@ -71,17 +69,17 @@ const taskDeleteRoute = createRoute({
     params: IdParamsSchema,
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonResponse(TaskSchema),
+    [HttpStatusCodes.OK]: jsonResponse(taskSchema),
   },
 });
 
 const router
   = createOpenAPIRouter()
-    .openapi(taskGetRoute, taskGetHandler)
-    .openapi(taskListRoute, taskListHandler)
-    .openapi(taskCreateRoute, taskCreateHandler)
-    .openapi(taskUpdateRoute, taskUpdateHandler)
-    .openapi(taskDeleteRoute, taskDeleteHandler);
+    .openapi(taskGetRoute, taskHandler.taskGetHandler)
+    .openapi(taskListRoute, taskHandler.taskListHandler)
+    .openapi(taskCreateRoute, taskHandler.taskCreateHandler)
+    .openapi(taskUpdateRoute, taskHandler.taskUpdateHandler)
+    .openapi(taskDeleteRoute, taskHandler.taskDeleteHandler);
 
 export type TaskGetRoute = typeof taskGetRoute;
 export type TaskListRoute = typeof taskListRoute;

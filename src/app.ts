@@ -12,9 +12,4 @@ registerLogger(app);
 registerMiddlewares(app);
 registerRouter(app, routers);
 
-app.get("/error", (c) => {
-  c.var.logger.error("error log");
-  throw new Error("Oh No!");
-});
-
 export default app;

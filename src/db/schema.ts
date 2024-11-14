@@ -9,7 +9,7 @@ export const taskTable = sqliteTable("task_table", {
   updatedAt: integer({ mode: "timestamp" }).$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
 });
 
-export const TaskSchema = z.object({
+export const taskSchema = z.object({
   id: z.number(),
   name: z.string(),
   done: z.boolean(),

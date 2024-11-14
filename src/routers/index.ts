@@ -1,8 +1,6 @@
-import indexRouter from "./index.route";
-import taskRouter from "./task.route";
+import taskRouter from "./task";
 
 const routers = [
-  indexRouter,
   taskRouter,
 ];
 
