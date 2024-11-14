@@ -25,10 +25,11 @@ export function configureOpenAPI(app: OpenAPIHono) {
     "/reference",
     apiReference({
       theme: "kepler",
-      layout: "classic",
+      layout: "modern",
       spec: {
         url: "/doc",
       },
+      hideDownloadButton: true,
       defaultHttpClient: {
         targetKey: "javascript",
         clientKey: "fetch",

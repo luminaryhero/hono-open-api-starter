@@ -9,6 +9,7 @@ import { taskSchema } from "@/db/schemas/task";
 import * as taskHandler from "@/routers/task/task.handler";
 
 const taskGetRoute = createRoute({
+  summary: "查找",
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
@@ -21,6 +22,7 @@ const taskGetRoute = createRoute({
 });
 
 const taskListRoute = createRoute({
+  summary: "列表",
   tags: ["Task"],
   method: "get",
   path: "/task",
@@ -33,6 +35,7 @@ const taskListRoute = createRoute({
 });
 
 const taskCreateRoute = createRoute({
+  summary: "新增",
   tags: ["Task"],
   method: "post",
   path: "/task",
@@ -47,6 +50,7 @@ const taskCreateRoute = createRoute({
 });
 
 const taskUpdateRoute = createRoute({
+  summary: "更新",
   tags: ["Task"],
   method: "put",
   path: "/task/{id}",
@@ -60,6 +64,7 @@ const taskUpdateRoute = createRoute({
 });
 
 const taskDeleteRoute = createRoute({
+  summary: "删除",
   tags: ["Task"],
   method: "delete",
   path: "/task/{id}",
