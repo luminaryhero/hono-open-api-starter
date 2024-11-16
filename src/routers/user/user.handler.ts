@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
-import type { UserCreateRoute, UserDeleteRoute, UserGetRoute, UserListRoute, UserUpdateRoute } from "@/routers/user/user.router";
+import type * as RT from "@/routers/user/user.router";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
@@ -10,7 +10,7 @@ import { userTable } from "@/drizzle/schemas/user";
 /**
  * Get a user by id
  */
-export const userGetHandler: AppRouteHandler<UserGetRoute> = async (c) => {
+export const userGetHandler: AppRouteHandler<RT.UserGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
 
   const data = await db.query.userTable.findFirst({
@@ -25,7 +25,7 @@ export const userGetHandler: AppRouteHandler<UserGetRoute> = async (c) => {
 /**
  * Get user list
  */
-export const userListHandler: AppRouteHandler<UserListRoute> = async (c) => {
+export const userListHandler: AppRouteHandler<RT.UserListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
   const result = await db.query.userTable.findMany({
@@ -41,7 +41,7 @@ export const userListHandler: AppRouteHandler<UserListRoute> = async (c) => {
 /**
  * Create a new user
  */
-export const userCreateHandler: AppRouteHandler<UserCreateRoute> = async (c) => {
+export const userCreateHandler: AppRouteHandler<RT.UserCreateRoute> = async (c) => {
   const body = await c.req.valid("json");
 
   const result = await db.insert(userTable).values(body).returning();
@@ -55,7 +55,7 @@ export const userCreateHandler: AppRouteHandler<UserCreateRoute> = async (c) => 
 /**
  * Update a user
  */
-export const userUpdateHandler: AppRouteHandler<UserUpdateRoute> = async (c) => {
+export const userUpdateHandler: AppRouteHandler<RT.UserUpdateRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const body = await c.req.valid("json");
 
@@ -71,7 +71,7 @@ export const userUpdateHandler: AppRouteHandler<UserUpdateRoute> = async (c) => 
 /**
  * Delete a user by id
  */
-export const userDeleteHandler: AppRouteHandler<UserDeleteRoute> = async (c) => {
+export const userDeleteHandler: AppRouteHandler<RT.UserDeleteRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const result = await db.delete(userTable).where(eq(userTable.id, id)).returning();
   const data = result[0];

@@ -106,16 +106,16 @@ export const favArticlePostHandler: AppRouteHandler<RT.FavArticlePostRoute> = as
   const { slug } = await c.req.valid("param");
   const { username } = await c.req.valid("json");
 
+  // 查询用户
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
   });
-
   nilThrowError(user, `The user not found,username = ${username}`);
 
+  // 查询文章
   const article = await db.query.articleTable.findFirst({
     where: eq(articleTable.slug, slug),
   });
-
   nilThrowError(article, `The article not found,slug = ${slug}`);
 
   // 收藏文章
@@ -123,7 +123,6 @@ export const favArticlePostHandler: AppRouteHandler<RT.FavArticlePostRoute> = as
   if (favorites.includes(article!.id)) {
     nilThrowError(null, `The article has been favored,id = ${article!.id}`);
   }
-
   favorites.push(article!.id);
 
   const result = await db

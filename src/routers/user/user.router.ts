@@ -6,10 +6,10 @@ import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
 import { userSchema } from "@/drizzle/schemas/user";
-import * as userHandler from "@/routers/user/user.handler";
+import * as handler from "@/routers/user/user.handler";
 
 const userGetRoute = createRoute({
-  summary: "查找",
+  summary: "查找用户",
   tags: ["User"],
   method: "get",
   path: "/user/{id}",
@@ -22,7 +22,7 @@ const userGetRoute = createRoute({
 });
 
 const userListRoute = createRoute({
-  summary: "列表",
+  summary: "用户列表",
   tags: ["User"],
   method: "get",
   path: "/user",
@@ -35,7 +35,7 @@ const userListRoute = createRoute({
 });
 
 const userCreateRoute = createRoute({
-  summary: "新增",
+  summary: "新增用户",
   tags: ["User"],
   method: "post",
   path: "/user",
@@ -50,7 +50,7 @@ const userCreateRoute = createRoute({
 });
 
 const userUpdateRoute = createRoute({
-  summary: "更新",
+  summary: "更新用户",
   tags: ["User"],
   method: "put",
   path: "/user/{id}",
@@ -64,7 +64,7 @@ const userUpdateRoute = createRoute({
 });
 
 const userDeleteRoute = createRoute({
-  summary: "删除",
+  summary: "删除用户",
   tags: ["User"],
   method: "delete",
   path: "/user/{id}",
@@ -78,11 +78,11 @@ const userDeleteRoute = createRoute({
 
 const router
   = createOpenAPIRouter()
-    .openapi(userGetRoute, userHandler.userGetHandler)
-    .openapi(userListRoute, userHandler.userListHandler)
-    .openapi(userCreateRoute, userHandler.userCreateHandler)
-    .openapi(userUpdateRoute, userHandler.userUpdateHandler)
-    .openapi(userDeleteRoute, userHandler.userDeleteHandler);
+    .openapi(userGetRoute, handler.userGetHandler)
+    .openapi(userListRoute, handler.userListHandler)
+    .openapi(userCreateRoute, handler.userCreateHandler)
+    .openapi(userUpdateRoute, handler.userUpdateHandler)
+    .openapi(userDeleteRoute, handler.userDeleteHandler);
 
 export type UserGetRoute = typeof userGetRoute;
 export type UserListRoute = typeof userListRoute;

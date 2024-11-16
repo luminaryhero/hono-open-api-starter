@@ -6,10 +6,10 @@ import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
 import { taskSchema } from "@/drizzle/schemas/task";
-import * as taskHandler from "@/routers/task/task.handler";
+import * as handler from "@/routers/task/task.handler";
 
 const taskGetRoute = createRoute({
-  summary: "查找",
+  summary: "查找任务",
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
@@ -22,7 +22,7 @@ const taskGetRoute = createRoute({
 });
 
 const taskListRoute = createRoute({
-  summary: "列表",
+  summary: "任务列表",
   tags: ["Task"],
   method: "get",
   path: "/task",
@@ -35,13 +35,18 @@ const taskListRoute = createRoute({
 });
 
 const taskCreateRoute = createRoute({
-  summary: "新增",
+  summary: "新增任务",
   tags: ["Task"],
   method: "post",
   path: "/task",
   request: {
     body: jsonContent(
-      taskSchema.omit({ id: true, createdAt: true, updatedAt: true }),
+      taskSchema
+        .omit({
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+        }),
     ),
   },
   responses: {
@@ -50,13 +55,21 @@ const taskCreateRoute = createRoute({
 });
 
 const taskUpdateRoute = createRoute({
-  summary: "更新",
+  summary: "更新任务",
   tags: ["Task"],
   method: "put",
   path: "/task/{id}",
   request: {
     params: IdParamsSchema,
-    body: jsonContent(taskSchema.omit({ id: true, createdAt: true, updatedAt: true }).partial()),
+    body: jsonContent(
+      taskSchema
+        .omit({
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+        })
+        .partial(),
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(taskSchema),
@@ -64,7 +77,7 @@ const taskUpdateRoute = createRoute({
 });
 
 const taskDeleteRoute = createRoute({
-  summary: "删除",
+  summary: "删除任务",
   tags: ["Task"],
   method: "delete",
   path: "/task/{id}",
@@ -78,11 +91,11 @@ const taskDeleteRoute = createRoute({
 
 const router
   = createOpenAPIRouter()
-    .openapi(taskGetRoute, taskHandler.taskGetHandler)
-    .openapi(taskListRoute, taskHandler.taskListHandler)
-    .openapi(taskCreateRoute, taskHandler.taskCreateHandler)
-    .openapi(taskUpdateRoute, taskHandler.taskUpdateHandler)
-    .openapi(taskDeleteRoute, taskHandler.taskDeleteHandler);
+    .openapi(taskGetRoute, handler.taskGetHandler)
+    .openapi(taskListRoute, handler.taskListHandler)
+    .openapi(taskCreateRoute, handler.taskCreateHandler)
+    .openapi(taskUpdateRoute, handler.taskUpdateHandler)
+    .openapi(taskDeleteRoute, handler.taskDeleteHandler);
 
 export type TaskGetRoute = typeof taskGetRoute;
 export type TaskListRoute = typeof taskListRoute;

@@ -10,7 +10,7 @@ import { articleSchema } from "@/drizzle/schemas/article";
 import * as handler from "@/routers/article/article.handler";
 
 const articleGetRoute = createRoute({
-  summary: "查找",
+  summary: "查找文章",
   tags: ["Article"],
   method: "get",
   path: "/article/{id}",
@@ -23,7 +23,7 @@ const articleGetRoute = createRoute({
 });
 
 const articleListRoute = createRoute({
-  summary: "列表",
+  summary: "文章列表",
   tags: ["Article"],
   method: "get",
   path: "/article",
@@ -36,13 +36,18 @@ const articleListRoute = createRoute({
 });
 
 const articleCreateRoute = createRoute({
-  summary: "新增",
+  summary: "新增文章",
   tags: ["Article"],
   method: "post",
   path: "/article",
   request: {
     body: jsonContent(
-      articleSchema.omit({ id: true, createdAt: true, updatedAt: true }),
+      articleSchema
+        .omit({
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+        }),
     ),
   },
   responses: {
@@ -51,13 +56,21 @@ const articleCreateRoute = createRoute({
 });
 
 const articleUpdateRoute = createRoute({
-  summary: "更新",
+  summary: "更新文章",
   tags: ["Article"],
   method: "put",
   path: "/article/{id}",
   request: {
     params: IdParamsSchema,
-    body: jsonContent(articleSchema.omit({ id: true, createdAt: true, updatedAt: true }).partial()),
+    body: jsonContent(
+      articleSchema
+        .omit({
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+        })
+        .partial(),
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(articleSchema),
@@ -65,7 +78,7 @@ const articleUpdateRoute = createRoute({
 });
 
 const articleDeleteRoute = createRoute({
-  summary: "删除",
+  summary: "删除文章",
   tags: ["Article"],
   method: "delete",
   path: "/article/{id}",
