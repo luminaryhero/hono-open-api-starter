@@ -9,21 +9,6 @@ import { articleTable } from "@/drizzle/schemas/article";
 import { commentTable } from "@/drizzle/schemas/comment";
 
 /**
- * Get a comment by id
- */
-export const commentGetHandler: AppRouteHandler<RT.CommentGetRoute> = async (c) => {
-  const { id } = await c.req.valid("param");
-
-  const data = await db.query.commentTable.findFirst({
-    where: eq(commentTable.id, id),
-  });
-
-  nilThrowError(data, `The comment not found,id = ${id}`);
-
-  return successResponse(c, data);
-};
-
-/**
  * Get comment list
  */
 export const commentListHandler: AppRouteHandler<RT.CommentListRoute> = async (c) => {

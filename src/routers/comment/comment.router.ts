@@ -3,23 +3,9 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
-import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
 import { commentSchema } from "@/drizzle/schemas/comment";
 import * as handler from "@/routers/comment/comment.handler";
-
-const commentGetRoute = createRoute({
-  summary: "查找评论",
-  tags: ["Comment"],
-  method: "get",
-  path: "/comment/{id}",
-  request: {
-    params: IdParamsSchema,
-  },
-  responses: {
-    [HttpStatusCodes.OK]: jsonResponse(commentSchema),
-  },
-});
 
 const commentListRoute = createRoute({
   summary: "评论列表",
@@ -76,12 +62,10 @@ const commentDeleteRoute = createRoute({
 
 const router
   = createOpenAPIRouter()
-    .openapi(commentGetRoute, handler.commentGetHandler)
     .openapi(commentListRoute, handler.commentListHandler)
     .openapi(commentCreateRoute, handler.commentCreateHandler)
     .openapi(commentDeleteRoute, handler.commentDeleteHandler);
 
-export type CommentGetRoute = typeof commentGetRoute;
 export type CommentListRoute = typeof commentListRoute;
 export type CommentCreateRoute = typeof commentCreateRoute;
 export type CommentDeleteRoute = typeof commentDeleteRoute;

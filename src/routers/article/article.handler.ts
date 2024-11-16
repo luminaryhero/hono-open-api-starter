@@ -16,6 +16,9 @@ export const articleGetHandler: AppRouteHandler<RT.ArticleGetRoute> = async (c) 
 
   const data = await db.query.articleTable.findFirst({
     where: eq(articleTable.id, id),
+    with: {
+      comments: true,
+    },
   });
 
   nilThrowError(data, `The article not found,id = ${id}`);
@@ -31,6 +34,9 @@ export const articleListHandler: AppRouteHandler<RT.ArticleListRoute> = async (c
 
   const result = await db.query.articleTable.findMany({
     orderBy: (articleTable, { asc }) => asc(articleTable.id),
+    with: {
+      comments: true,
+    },
   });
 
   // 数据分页
@@ -91,6 +97,9 @@ export const authorArticlesHandler: AppRouteHandler<RT.AuthorArticlesRoute> = as
   const result = await db.query.articleTable.findMany({
     where: eq(articleTable.authorId, author),
     orderBy: (articleTable, { asc }) => asc(articleTable.id),
+    with: {
+      comments: true,
+    },
   });
 
   // 数据分页

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { now } from "@/common/helpers/date";
 
-import { commentTable } from "./comment";
+import { commentSchema, commentTable } from "./comment";
 import { userTable } from "./user";
 
 export const articleTable = pgTable("article_table", {
@@ -32,6 +32,7 @@ export const articleSchema = z.object({
   description: z.string().min(1).max(50),
   authorId: z.number(),
   favored: z.boolean().default(false),
+  comments: z.array(commentSchema),
   createdAt: z.date().nullable(),
   updatedAt: z.date().nullable(),
 });
