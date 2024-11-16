@@ -100,7 +100,7 @@ export const authorArticlesHandler: AppRouteHandler<RT.AuthorArticlesRoute> = as
 };
 
 /**
- * 收藏文章
+ * 新增收藏文章
  */
 export const favArticlePostHandler: AppRouteHandler<RT.FavArticlePostRoute> = async (c) => {
   const { slug } = await c.req.valid("param");
@@ -157,6 +157,37 @@ export const favArticlesHandler: AppRouteHandler<RT.FavArticlesRoute> = async (c
 
   // 数据分页
   const data = paginate(result, page, pageSize);
+
+  return successResponse(c, data);
+};
+
+/**
+ * 删除收藏文章
+ */
+export const favArticleDeleteHandler: AppRouteHandler<RT.FavArticleDeleteRoute> = async (c) => {
+  const { userId, articleId } = await c.req.valid("json");
+
+  // 查询用户
+  const user = await db.query.userTable.findFirst({
+    where: eq(userTable.id, userId),
+  });
+  nilThrowError(user, `The user not found,id = ${userId}`);
+
+  const favorites = user?.favorites || [];
+
+  const index = favorites.indexOf(articleId);
+  if (index === -1) {
+    nilThrowError(null, `The article has not been favored,id = ${articleId}`);
+  }
+  favorites.splice(index, 1);
+
+  const result = await db
+    .update(userTable)
+    .set({ favorites })
+    .where(eq(userTable.id, userId))
+    .returning();
+
+  const data = result[0];
 
   return successResponse(c, data);
 };

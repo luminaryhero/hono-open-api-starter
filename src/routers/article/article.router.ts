@@ -110,10 +110,10 @@ const authorArticlesRoute = createRoute({
 });
 
 /**
- * 收藏文章
+ * 新增收藏文章
  */
 const favArticlePostRoute = createRoute({
-  summary: "收藏文章",
+  summary: "新增收藏文章",
   tags: ["Article"],
   method: "post",
   path: "/favArticles/{slug}",
@@ -132,10 +132,10 @@ const favArticlePostRoute = createRoute({
 });
 
 /**
- * 用户收藏文章列表
+ * 收藏文章列表
  */
 const favArticlesRoute = createRoute({
-  summary: "用户收藏文章列表",
+  summary: "收藏文章列表",
   tags: ["Article"],
   method: "get",
   path: "/favArticles",
@@ -144,6 +144,27 @@ const favArticlesRoute = createRoute({
       username: z.string(),
     })
       .merge(PageParamsSchema),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(articleSchema),
+  },
+});
+
+/**
+ * 删除收藏文章
+ */
+const favArticleDeleteRoute = createRoute({
+  summary: "删除收藏文章",
+  tags: ["Article"],
+  method: "delete",
+  path: "/favArticles",
+  request: {
+    body: jsonContent(
+      z.object({
+        userId: z.number(),
+        articleId: z.number(),
+      }),
+    ),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(articleSchema),
@@ -159,7 +180,8 @@ const router
     .openapi(articleDeleteRoute, handler.articleDeleteHandler)
     .openapi(authorArticlesRoute, handler.authorArticlesHandler)
     .openapi(favArticlePostRoute, handler.favArticlePostHandler)
-    .openapi(favArticlesRoute, handler.favArticlesHandler);
+    .openapi(favArticlesRoute, handler.favArticlesHandler)
+    .openapi(favArticleDeleteRoute, handler.favArticleDeleteHandler);
 
 export type ArticleGetRoute = typeof articleGetRoute;
 export type ArticleListRoute = typeof articleListRoute;
@@ -169,5 +191,6 @@ export type ArticleDeleteRoute = typeof articleDeleteRoute;
 export type AuthorArticlesRoute = typeof authorArticlesRoute;
 export type FavArticlePostRoute = typeof favArticlePostRoute;
 export type FavArticlesRoute = typeof favArticlesRoute;
+export type FavArticleDeleteRoute = typeof favArticleDeleteRoute;
 
 export default router;
