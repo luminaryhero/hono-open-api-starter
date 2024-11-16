@@ -5,8 +5,9 @@ import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/sc
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
+import SlugParamsSchema from "@/common/schemas/slug-params";
 import { articleSchema } from "@/drizzle/schemas/article";
-import * as articleHandler from "@/routers/article/article.handler";
+import * as handler from "@/routers/article/article.handler";
 
 const articleGetRoute = createRoute({
   summary: "查找",
@@ -76,52 +77,84 @@ const articleDeleteRoute = createRoute({
   },
 });
 
-const articleListByAuthorRoute = createRoute({
-  summary: "根据作者获取文章列表",
+/**
+ * 作者文章列表
+ */
+const authorArticlesRoute = createRoute({
+  summary: "作者文章列表",
   tags: ["Article"],
   method: "get",
-  path: "/articlesByAuthor",
+  path: "/authorArticles",
   request: {
     query: z.object({
       author: z.string().pipe(z.coerce.number()),
-    }),
+    })
+      .merge(PageParamsSchema),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonPageResponse(articleSchema),
   },
 });
 
-const articleFavListRoute = createRoute({
-  summary: "用户收藏的文章列表",
+/**
+ * 收藏文章
+ */
+const favArticlePostRoute = createRoute({
+  summary: "收藏文章",
+  tags: ["Article"],
+  method: "post",
+  path: "/favArticles/{slug}",
+  request: {
+    params: SlugParamsSchema,
+    body: jsonContent(
+      z.object({
+        username: z.string(),
+      })
+        .merge(PageParamsSchema),
+    ),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(articleSchema),
+  },
+});
+
+/**
+ * 用户收藏文章列表
+ */
+const favArticlesRoute = createRoute({
+  summary: "用户收藏文章列表",
   tags: ["Article"],
   method: "get",
-  path: "/favArticlesByUsername",
+  path: "/favArticles",
   request: {
     query: z.object({
       username: z.string(),
-    }).merge(PageParamsSchema),
+    })
+      .merge(PageParamsSchema),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonPageResponse(articleSchema),
+    [HttpStatusCodes.OK]: jsonResponse(articleSchema),
   },
 });
 
 const router
   = createOpenAPIRouter()
-    .openapi(articleGetRoute, articleHandler.articleGetHandler)
-    .openapi(articleListRoute, articleHandler.articleListHandler)
-    .openapi(articleCreateRoute, articleHandler.articleCreateHandler)
-    .openapi(articleUpdateRoute, articleHandler.articleUpdateHandler)
-    .openapi(articleDeleteRoute, articleHandler.articleDeleteHandler)
-    .openapi(articleListByAuthorRoute, articleHandler.articleListByAuthorHandler)
-    .openapi(articleFavListRoute, articleHandler.articleFavListHandler);
+    .openapi(articleGetRoute, handler.articleGetHandler)
+    .openapi(articleListRoute, handler.articleListHandler)
+    .openapi(articleCreateRoute, handler.articleCreateHandler)
+    .openapi(articleUpdateRoute, handler.articleUpdateHandler)
+    .openapi(articleDeleteRoute, handler.articleDeleteHandler)
+    .openapi(authorArticlesRoute, handler.authorArticlesHandler)
+    .openapi(favArticlePostRoute, handler.favArticlePostHandler)
+    .openapi(favArticlesRoute, handler.favArticlesHandler);
 
 export type ArticleGetRoute = typeof articleGetRoute;
 export type ArticleListRoute = typeof articleListRoute;
 export type ArticleCreateRoute = typeof articleCreateRoute;
 export type ArticleUpdateRoute = typeof articleUpdateRoute;
 export type ArticleDeleteRoute = typeof articleDeleteRoute;
-export type ArticleListByAuthorRoute = typeof articleListByAuthorRoute;
-export type ArticleFavListRoute = typeof articleFavListRoute;
+export type AuthorArticlesRoute = typeof authorArticlesRoute;
+export type FavArticlePostRoute = typeof favArticlePostRoute;
+export type FavArticlesRoute = typeof favArticlesRoute;
 
 export default router;

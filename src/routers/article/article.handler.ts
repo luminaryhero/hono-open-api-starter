@@ -1,7 +1,7 @@
 import { eq, inArray } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
-import type { ArticleCreateRoute, ArticleDeleteRoute, ArticleFavListRoute, ArticleGetRoute, ArticleListByAuthorRoute, ArticleListRoute, ArticleUpdateRoute } from "@/routers/article/article.router";
+import type * as RT from "@/routers/article/article.router";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
@@ -11,7 +11,7 @@ import { userTable } from "@/drizzle/schemas/user";
 /**
  * Get a article by id
  */
-export const articleGetHandler: AppRouteHandler<ArticleGetRoute> = async (c) => {
+export const articleGetHandler: AppRouteHandler<RT.ArticleGetRoute> = async (c) => {
   const { id } = await c.req.valid("param");
 
   const data = await db.query.articleTable.findFirst({
@@ -26,7 +26,7 @@ export const articleGetHandler: AppRouteHandler<ArticleGetRoute> = async (c) => 
 /**
  * Get article list
  */
-export const articleListHandler: AppRouteHandler<ArticleListRoute> = async (c) => {
+export const articleListHandler: AppRouteHandler<RT.ArticleListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
   const result = await db.query.articleTable.findMany({
@@ -42,7 +42,7 @@ export const articleListHandler: AppRouteHandler<ArticleListRoute> = async (c) =
 /**
  * Create a new article
  */
-export const articleCreateHandler: AppRouteHandler<ArticleCreateRoute> = async (c) => {
+export const articleCreateHandler: AppRouteHandler<RT.ArticleCreateRoute> = async (c) => {
   const body = await c.req.valid("json");
 
   const result = await db.insert(articleTable).values(body).returning();
@@ -56,7 +56,7 @@ export const articleCreateHandler: AppRouteHandler<ArticleCreateRoute> = async (
 /**
  * Update a article
  */
-export const articleUpdateHandler: AppRouteHandler<ArticleUpdateRoute> = async (c) => {
+export const articleUpdateHandler: AppRouteHandler<RT.ArticleUpdateRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const body = await c.req.valid("json");
 
@@ -72,7 +72,7 @@ export const articleUpdateHandler: AppRouteHandler<ArticleUpdateRoute> = async (
 /**
  * Delete a article by id
  */
-export const articleDeleteHandler: AppRouteHandler<ArticleDeleteRoute> = async (c) => {
+export const articleDeleteHandler: AppRouteHandler<RT.ArticleDeleteRoute> = async (c) => {
   const { id } = await c.req.valid("param");
   const result = await db.delete(articleTable).where(eq(articleTable.id, id)).returning();
   const data = result[0];
@@ -85,7 +85,7 @@ export const articleDeleteHandler: AppRouteHandler<ArticleDeleteRoute> = async (
 /**
  * Get article list  by userId
  */
-export const articleListByAuthorHandler: AppRouteHandler<ArticleListByAuthorRoute> = async (c) => {
+export const authorArticlesHandler: AppRouteHandler<RT.AuthorArticlesRoute> = async (c) => {
   const { author } = await c.req.valid("query");
 
   const result = await db.query.articleTable.findMany({
@@ -100,9 +100,47 @@ export const articleListByAuthorHandler: AppRouteHandler<ArticleListByAuthorRout
 };
 
 /**
- * Articles Favored by Username
+ * 收藏文章
  */
-export const articleFavListHandler: AppRouteHandler<ArticleFavListRoute> = async (c) => {
+export const favArticlePostHandler: AppRouteHandler<RT.FavArticlePostRoute> = async (c) => {
+  const { slug } = await c.req.valid("param");
+  const { username } = await c.req.valid("json");
+
+  const user = await db.query.userTable.findFirst({
+    where: eq(userTable.username, username),
+  });
+
+  nilThrowError(user, `The user not found,username = ${username}`);
+
+  const article = await db.query.articleTable.findFirst({
+    where: eq(articleTable.slug, slug),
+  });
+
+  nilThrowError(article, `The article not found,slug = ${slug}`);
+
+  // 收藏文章
+  const favorites = user?.favorites || [];
+  if (favorites.includes(article!.id)) {
+    nilThrowError(null, `The article has been favored,id = ${article!.id}`);
+  }
+
+  favorites.push(article!.id);
+
+  const result = await db
+    .update(userTable)
+    .set({ favorites })
+    .where(eq(userTable.id, user!.id))
+    .returning();
+
+  const data = result[0];
+
+  return successResponse(c, data);
+};
+
+/**
+ * 用户收藏文章列表
+ */
+export const favArticlesHandler: AppRouteHandler<RT.FavArticlesRoute> = async (c) => {
   const { page = 1, pageSize = 10, username } = await c.req.valid("query");
 
   const user = await db.query.userTable.findFirst({

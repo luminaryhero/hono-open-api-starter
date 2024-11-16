@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { integer, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
 import { now } from "@/common/helpers/date";
@@ -20,7 +20,6 @@ export const userTable = pgTable("user_table", {
 
 export const userRelationsTable = relations(userTable, ({ many }) => ({
   articles: many(articleTable),
-  favorites: many(articleTable),
 }));
 
 export const userSchema = z.object({
@@ -28,6 +27,9 @@ export const userSchema = z.object({
   username: z.string().min(1).max(20),
   email: z.string().email(),
   password: z.string().min(6).max(20),
+  bio: z.string().min(1).max(50).optional(),
+  image: z.string().optional(),
+  favorites: z.array(z.number()).optional(),
   createdAt: z.date().nullable(),
   updatedAt: z.date().nullable(),
 });

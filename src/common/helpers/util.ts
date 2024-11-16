@@ -51,8 +51,8 @@ export function successResponse(c: Context, data: any): any {
  * @param {any} data
  * @param {string} message
  */
-export function nilThrowError(data: any, message: string) {
-  if (_.isNil(data))
+export function nilThrowError<T>(data: T, message: string) {
+  if (data == null || undefined)
     throw new Error(message || "error");
 }
 
