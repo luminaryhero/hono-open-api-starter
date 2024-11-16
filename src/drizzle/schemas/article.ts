@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { now } from "@/common/helpers/date";
 
+import { commentTable } from "./comment";
 import { userTable } from "./user";
 
 export const articleTable = pgTable("article_table", {
@@ -16,8 +17,12 @@ export const articleTable = pgTable("article_table", {
   updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
 });
 
-export const articleRelationsTable = relations(articleTable, ({ one }) => ({
-  author: one(userTable, { fields: [articleTable.authorId], references: [userTable.id] }),
+export const articleRelationsTable = relations(articleTable, ({ one, many }) => ({
+  author: one(userTable, {
+    fields: [articleTable.authorId],
+    references: [userTable.id],
+  }),
+  comments: many(commentTable),
 }));
 
 export const articleSchema = z.object({
