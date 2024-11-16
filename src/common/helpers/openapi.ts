@@ -1,5 +1,7 @@
 import type { Hook } from "@hono/zod-openapi";
 
+import { fromError } from "zod-validation-error";
+
 import { UNPROCESSABLE_ENTITY } from "../lib/http-status-codes";
 
 /**
@@ -13,7 +15,8 @@ import { UNPROCESSABLE_ENTITY } from "../lib/http-status-codes";
  */
 const defaultHook: Hook<any, any, any, any> = async (result, c) => {
   if (!result.success) {
-    const message = `${result.error?.issues[0]?.message} - ${result.error?.issues[0]?.path[0]}`;
+    const validationError = fromError(result.error);
+    const message = validationError.toString();
     c.var.logger.error(message);
 
     return c.json(

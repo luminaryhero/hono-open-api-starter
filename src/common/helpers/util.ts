@@ -16,7 +16,7 @@ import type { PR, R } from "../types";
  *   the total number of items, the current page, and the page size. "items" is an array
  *   of the items for the given page.
  */
-export function paginate(items: any[], page: number, pageSize: number) {
+export function paginate(items: any[], page: number = 1, pageSize: number = 10) {
   return {
     meta: {
       total: items.length,
