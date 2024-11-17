@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/tag/tag.router";

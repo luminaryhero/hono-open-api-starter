@@ -1,10 +1,15 @@
 import type { Context } from "hono";
 
+import { eq } from "drizzle-orm/pg-core/expressions";
+import { verify } from "hono/jwt";
 import _ from "lodash";
 
 import { format } from "@/common/helpers/date";
+import db from "@/drizzle";
+import { userTable } from "@/drizzle/schemas/user";
+import env from "@/env";
 
-import type { PR, R } from "../types";
+import type { AppEnv, PR, R } from "../types";
 
 /**
  * Paginate a list of items, given a page and page size.
@@ -52,7 +57,7 @@ export function successResponse(c: Context, data: any): any {
  * @param {string} message
  */
 export function nilThrowError<T>(data: T, message: string) {
-  if (data == null || undefined)
+  if (typeof data === "undefined" || data === null)
     throw new Error(message || "error");
 }
 
@@ -105,4 +110,20 @@ function serialize<T extends R | PR>(data: T): T {
       data: item,
     };
   }
+}
+
+/**
+ * 异步校验Token
+ */
+export async function asyncVerifyToken(token: string, _c: Context<AppEnv>): Promise<boolean> {
+  const { sub: username } = await verify(token, env.JWT_SECRET);
+
+  if (!username || typeof username !== "string")
+    return false;
+
+  const user = await db.query.userTable.findFirst({
+    where: eq(userTable.username, username),
+  });
+
+  return !!user;
 }

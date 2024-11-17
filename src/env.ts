@@ -9,6 +9,7 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
   PORT: z.coerce.number().default(9999),
   DATABASE_URL: z.string().url(),
+  JWT_SECRET: z.string(),
 });
 
 // eslint-disable-next-line node/no-process-env

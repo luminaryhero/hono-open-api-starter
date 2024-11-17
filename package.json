@@ -8,6 +8,8 @@
     "lint:fix": "eslint . --fix",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
+    "schema:pull": "drizzle-kit pull",
+    "schema:push": "drizzle-kit push",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {

@@ -17,6 +17,7 @@ const client = postgres(env.DATABASE_URL);
 const db = drizzle({
   client,
   logger,
+  // casing: "snake_case",
   schema: {
     ...taskSchema,
     ...userSchema,

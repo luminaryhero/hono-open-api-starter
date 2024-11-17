@@ -5,7 +5,6 @@ import type * as RT from "@/routers/comment/comment.router";
 
 import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
-import { articleTable } from "@/drizzle/schemas/article";
 import { commentTable } from "@/drizzle/schemas/comment";
 
 /**

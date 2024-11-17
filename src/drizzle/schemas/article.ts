@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
 import { now } from "@/common/helpers/date";
@@ -14,7 +14,7 @@ export const articleTable = pgTable("article_table", {
   title: text().notNull().unique(),
   slug: text().notNull().unique(),
   description: text(),
-  authorId: integer().notNull(),
+  authorId: integer("author_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(now),
   updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
 });

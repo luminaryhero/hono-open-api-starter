@@ -18,7 +18,14 @@ export function configureOpenAPI(app: OpenAPIHono) {
     info: {
       version: "1.0.0",
       title: "My Hono API",
+      description: "API Documentation",
     },
+  });
+
+  // setup authorization
+  app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
+    type: "http",
+    scheme: "bearer",
   });
 
   app.get(

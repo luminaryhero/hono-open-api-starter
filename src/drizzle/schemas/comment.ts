@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
 import { now } from "@/common/helpers/date";
@@ -9,8 +9,8 @@ import { articleTable } from "./article";
 export const commentTable = pgTable("comment_table", {
   id: serial().primaryKey(),
   body: text().notNull(),
-  userId: integer().notNull(),
-  articleId: integer(),
+  userId: integer("user_id").notNull(),
+  articleId: integer("article_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(now),
 });
 

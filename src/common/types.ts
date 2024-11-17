@@ -1,5 +1,13 @@
 import type { OpenAPIHono, RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
+import type { JwtVariables } from "hono/jwt";
+import type { JWTPayload } from "hono/utils/jwt/types";
+
+export interface JWT_PAYLOAD extends JWTPayload {
+  sub: string;
+  role: string;
+  exp: number;
+}
 
 /**
  * App环境变量
@@ -7,6 +15,7 @@ import type { PinoLogger } from "hono-pino";
 export interface AppEnv {
   Variables: {
     logger: PinoLogger;
+    jwt: JwtVariables<JWT_PAYLOAD>;
   };
 }
 
