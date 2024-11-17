@@ -18,6 +18,7 @@ export const articleGetHandler: AppRouteHandler<RT.ArticleGetRoute> = async (c) 
     where: eq(articleTable.id, id),
     with: {
       comments: true,
+      tags: true,
     },
   });
 
@@ -36,6 +37,7 @@ export const articleListHandler: AppRouteHandler<RT.ArticleListRoute> = async (c
     orderBy: (articleTable, { asc }) => asc(articleTable.id),
     with: {
       comments: true,
+      tags: true,
     },
   });
 

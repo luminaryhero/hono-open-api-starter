@@ -7,6 +7,7 @@ import IdParamsSchema from "@/common/schemas/id-params";
 import PageParamsSchema from "@/common/schemas/page-params";
 import SlugParamsSchema from "@/common/schemas/slug-params";
 import { articleSchema } from "@/drizzle/schemas/article";
+import { tagSchema } from "@/drizzle/schemas/tag";
 import * as handler from "@/routers/article/article.handler";
 
 const articleGetRoute = createRoute({
@@ -47,6 +48,8 @@ const articleCreateRoute = createRoute({
           id: true,
           createdAt: true,
           updatedAt: true,
+          comments: true,
+          tags: true,
         }),
     ),
   },
@@ -68,6 +71,9 @@ const articleUpdateRoute = createRoute({
           id: true,
           createdAt: true,
           updatedAt: true,
+          favored: true,
+          comments: true,
+          tags: true,
         })
         .partial(),
     ),
