@@ -18,7 +18,7 @@ export const now = () => dayjs.tz(currentTimezone()).toDate();
 /**
  * 格式化日期
  */
-export function format(date: Date, formatStr = "YYYY-MM-DD HH:mm:ss") {
+export function dateFormat(date: Date, formatStr = "YYYY-MM-DD HH:mm:ss") {
   if (!date)
     return null;
 

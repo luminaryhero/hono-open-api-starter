@@ -5,7 +5,7 @@ import { HTTPException } from "hono/http-exception";
 import { verify } from "hono/jwt";
 import _ from "lodash";
 
-import { format } from "@/common/helpers/date";
+import { dateFormat } from "@/common/helpers/date";
 import db from "@/drizzle";
 import { userTable } from "@/drizzle/schemas/user";
 import env from "@/env";
@@ -73,14 +73,12 @@ function serialize<T extends R | PR>(data: T): T {
   if ("meta" in data.data) {
     let items = data.data.items;
 
-    console.log(items[0]?.updatedAt instanceof Date);
-
     items = items.map((item: any) => {
       if (item.createdAt) {
-        item.createdAt = format(item.createdAt);
+        item.createdAt = dateFormat(item.createdAt);
       }
       if (item.updatedAt) {
-        item.updatedAt = format(item.updatedAt);
+        item.updatedAt = dateFormat(item.updatedAt);
       }
 
       item = _.omit(item, safeFields);
@@ -100,10 +98,10 @@ function serialize<T extends R | PR>(data: T): T {
     let item = data.data;
 
     if (item.createdAt) {
-      item.createdAt = format(item.createdAt);
+      item.createdAt = dateFormat(item.createdAt);
     }
     if (item.updatedAt) {
-      item.updatedAt = format(item.updatedAt);
+      item.updatedAt = dateFormat(item.updatedAt);
     }
 
     item = _.omit(item, safeFields);
