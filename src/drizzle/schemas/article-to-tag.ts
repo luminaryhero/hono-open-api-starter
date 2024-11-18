@@ -8,10 +8,16 @@ import { tagTable } from "./tag";
 export const articleToTagTable = pgTable("article_to_tag_table", {
   articleId: integer()
     .notNull()
-    .references(() => articleTable.id),
+    .references(() => articleTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
   tagId: integer()
     .notNull()
-    .references(() => tagTable.id),
+    .references(() => tagTable.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
 }, t => ({
   pk: primaryKey({ columns: [t.articleId, t.tagId] }),
 }));

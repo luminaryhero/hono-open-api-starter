@@ -21,18 +21,16 @@ function createFileTransport(level: Level) {
   );
 }
 
-export function createLogger() {
-  return pinoLogger({
-    pino: pino({
-      level: LOG_LEVEL,
-      formatters: {
-        level: label => ({ level: label }),
-      },
-    }, NODE_ENV === "production"
-      ? createFileTransport(LOG_LEVEL)
-      : pretty()),
-    http: {
-      reqId: () => crypto.randomUUID(),
+export const pinoLoggerMiddleware = pinoLogger({
+  pino: pino({
+    level: LOG_LEVEL,
+    formatters: {
+      level: label => ({ level: label }),
     },
-  });
-}
+  }, NODE_ENV === "production"
+    ? createFileTransport(LOG_LEVEL)
+    : pretty()),
+  http: {
+    reqId: () => crypto.randomUUID(),
+  },
+});

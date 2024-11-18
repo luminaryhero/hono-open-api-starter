@@ -5,8 +5,8 @@ import { z } from "zod";
 import { articleToTagTable } from "./article-to-tag";
 
 export const tagTable = pgTable("tag_table", {
-  id: serial().primaryKey(),
-  name: text().notNull().unique(),
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
 });
 
 export const tagRelationsTable = relations(tagTable, ({ many }) => ({

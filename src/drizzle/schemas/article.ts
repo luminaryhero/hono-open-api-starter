@@ -10,10 +10,10 @@ import { tagSchema } from "./tag";
 import { userTable } from "./user";
 
 export const articleTable = pgTable("article_table", {
-  id: serial().primaryKey(),
-  title: text().notNull().unique(),
-  slug: text().notNull().unique(),
-  description: text(),
+  id: serial("id").primaryKey(),
+  title: text("title").notNull().unique(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
   authorId: integer("author_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(now),
   updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),

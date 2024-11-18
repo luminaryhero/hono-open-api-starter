@@ -1,14 +1,12 @@
 import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-import { now } from "@/common/helpers/date";
-
 export const taskTable = pgTable("task_table", {
-  id: serial().primaryKey(),
-  name: text().notNull().unique(),
-  done: boolean().notNull().default(false),
-  createdAt: timestamp("created_at").$defaultFn(now),
-  updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  done: boolean("done").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
 });
 
 export const taskSchema = z.object({

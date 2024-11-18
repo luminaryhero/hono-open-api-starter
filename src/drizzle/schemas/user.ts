@@ -7,13 +7,13 @@ import { now } from "@/common/helpers/date";
 import { articleTable } from "./article";
 
 export const userTable = pgTable("user_table", {
-  id: serial().primaryKey(),
-  username: text().notNull().unique(),
-  email: text().notNull().unique(),
-  password: text().notNull(),
-  bio: text(),
-  image: text(),
-  favorites: integer().array().default(sql`'{}'::integer[]`),
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  bio: text("bio"),
+  image: text("image"),
+  favorites: integer("favorites").array().default(sql`'{}'::integer[]`),
   createdAt: timestamp("created_at").$defaultFn(now),
   updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
 });

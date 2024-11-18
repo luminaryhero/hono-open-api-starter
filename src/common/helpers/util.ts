@@ -73,6 +73,8 @@ function serialize<T extends R | PR>(data: T): T {
   if ("meta" in data.data) {
     let items = data.data.items;
 
+    console.log(items[0]?.updatedAt instanceof Date);
+
     items = items.map((item: any) => {
       if (item.createdAt) {
         item.createdAt = format(item.createdAt);
@@ -117,7 +119,6 @@ function serialize<T extends R | PR>(data: T): T {
  * 异步校验Token
  */
 export async function asyncVerifyToken(token: string, _c: Context<AppEnv>): Promise<boolean> {
-  console.log("asyncVerifyToken");
   if (!token) {
     throw new Error("未传入Token");
   }

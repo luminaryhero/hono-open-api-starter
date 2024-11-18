@@ -7,8 +7,8 @@ import { now } from "@/common/helpers/date";
 import { articleTable } from "./article";
 
 export const commentTable = pgTable("comment_table", {
-  id: serial().primaryKey(),
-  body: text().notNull(),
+  id: serial("id").primaryKey(),
+  body: text("body").notNull(),
   userId: integer("user_id").notNull(),
   articleId: integer("article_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(now),

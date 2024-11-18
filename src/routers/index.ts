@@ -1,5 +1,4 @@
 import articleRouter from "./article/article.router";
-// import authRouter from "./auth/auth.router";
 import commentRouter from "./comment/comment.router";
 import tagRouter from "./tag/tag.router";
 import taskRouter from "./task/task.router";
@@ -11,7 +10,6 @@ const routers = [
   articleRouter,
   commentRouter,
   tagRouter,
-  // authRouter,
 ];
 
 export default routers;
