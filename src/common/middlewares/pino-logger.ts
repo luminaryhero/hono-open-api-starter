@@ -4,7 +4,7 @@ import pretty from "pino-pretty";
 
 import env from "@/env";
 
-import { format, now } from "../helpers/date";
+import { dateFormat, now } from "../helpers/date";
 
 const LOG_LEVEL = env.LOG_LEVEL || "info";
 const NODE_ENV = env.NODE_ENV || "development";
@@ -15,7 +15,7 @@ function createFileTransport(level: Level) {
       level,
       target: "pino/file",
       options: {
-        destination: `./logs/${format(now(), "YYYY-MM-DD")}-${level}`,
+        destination: `./logs/${dateFormat(now(), "YYYY-MM-DD")}-${level}`,
       },
     },
   );

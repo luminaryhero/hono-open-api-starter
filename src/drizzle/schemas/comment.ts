@@ -2,8 +2,6 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-import { now } from "@/common/helpers/date";
-
 import { articleTable } from "./article";
 
 export const commentTable = pgTable("comment_table", {
@@ -11,7 +9,7 @@ export const commentTable = pgTable("comment_table", {
   body: text("body").notNull(),
   userId: integer("user_id").notNull(),
   articleId: integer("article_id").notNull(),
-  createdAt: timestamp("created_at").$defaultFn(now),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
 export const commentRelations = relations(commentTable, ({ one }) => ({

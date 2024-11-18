@@ -27,7 +27,7 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
   const payload: JWT_PAYLOAD = {
     sub: username,
     role: "admin",
-    exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
+    exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
   };
 
   // 生成 token

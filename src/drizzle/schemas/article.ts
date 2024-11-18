@@ -2,8 +2,6 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-import { now } from "@/common/helpers/date";
-
 import { articleToTagTable } from "./article-to-tag";
 import { commentSchema, commentTable } from "./comment";
 import { tagSchema } from "./tag";
@@ -15,8 +13,8 @@ export const articleTable = pgTable("article_table", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   authorId: integer("author_id").notNull(),
-  createdAt: timestamp("created_at").$defaultFn(now),
-  updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
 });
 
 export const articleRelationsTable = relations(articleTable, ({ one, many }) => ({

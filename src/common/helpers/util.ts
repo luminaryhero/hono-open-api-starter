@@ -1,7 +1,6 @@
 import type { Context } from "hono";
 
 import { eq } from "drizzle-orm/pg-core/expressions";
-import { HTTPException } from "hono/http-exception";
 import { verify } from "hono/jwt";
 import _ from "lodash";
 

@@ -2,8 +2,6 @@ import { relations, sql } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-import { now } from "@/common/helpers/date";
-
 import { articleTable } from "./article";
 
 export const userTable = pgTable("user_table", {
@@ -14,8 +12,8 @@ export const userTable = pgTable("user_table", {
   bio: text("bio"),
   image: text("image"),
   favorites: integer("favorites").array().default(sql`'{}'::integer[]`),
-  createdAt: timestamp("created_at").$defaultFn(now),
-  updatedAt: timestamp("updated_at").$defaultFn(now).$onUpdate(now),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
 });
 
 export const userRelationsTable = relations(userTable, ({ many }) => ({
