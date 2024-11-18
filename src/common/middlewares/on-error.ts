@@ -24,7 +24,7 @@ const onError: ErrorHandler = (err, c) => {
     {
       code: -1,
       data: null,
-      message: err.message,
+      message: `${err.name}: ${err.message}`,
       stack: env === "production"
         ? undefined
         : err.stack,

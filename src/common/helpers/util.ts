@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 
 import { eq } from "drizzle-orm/pg-core/expressions";
+import { HTTPException } from "hono/http-exception";
 import { verify } from "hono/jwt";
 import _ from "lodash";
 
@@ -116,6 +117,11 @@ function serialize<T extends R | PR>(data: T): T {
  * 异步校验Token
  */
 export async function asyncVerifyToken(token: string, _c: Context<AppEnv>): Promise<boolean> {
+  console.log("asyncVerifyToken");
+  if (!token) {
+    throw new Error("未传入Token");
+  }
+
   const { sub: username } = await verify(token, env.JWT_SECRET);
 
   if (!username || typeof username !== "string")
