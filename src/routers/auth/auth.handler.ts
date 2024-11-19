@@ -1,10 +1,11 @@
+import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
 
 import type { AppRouteHandler, JWT_PAYLOAD } from "@/common/types";
 import type * as RT from "@/routers/auth/auth.router";
 
-import { nilThrowError, successResponse } from "@/common/helpers/util";
+import { successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { userTable } from "@/drizzle/schemas/user";
 import env from "@/env";
@@ -18,9 +19,13 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
   });
+  if (user === undefined) {
+    throw new Error(`username or password is incorrect`);
+  }
 
   // 校验用户名和密码是否匹配
-  if (user === undefined || password !== user.password) {
+  const isMatch = await bcrypt.compare(password, user?.password);
+  if (!isMatch) {
     throw new Error(`username or password is incorrect`);
   }
 
@@ -40,18 +45,28 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
  * 注册
  */
 export const registerHandler: AppRouteHandler<RT.RegisterRoute> = async (c) => {
-  const body = await c.req.valid("json");
+  const { username, password, email } = await c.req.valid("json");
 
   const user = await db.query.userTable.findFirst({
-    where: eq(userTable.username, body.username),
+    where: eq(userTable.username, username),
   });
 
   // 校验用户名是否注册
   if (user !== undefined) {
-    throw new Error(`The username is token,username=${body.username}`);
+    throw new Error(`The username is taken,username=${username}`);
   }
 
-  const result = await db.insert(userTable).values(body).returning();
+  // 密码加密
+  const hash = await bcrypt.hash(password, 10);
+
+  const result = await db
+    .insert(userTable)
+    .values({
+      username,
+      password: hash,
+      email,
+    })
+    .returning();
 
   return successResponse(c, result[0]);
 };

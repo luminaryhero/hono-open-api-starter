@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/comment/comment.router";
 
-import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
+import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { commentTable } from "@/drizzle/schemas/comment";
 
@@ -33,7 +33,8 @@ export const commentCreateHandler: AppRouteHandler<RT.CommentCreateRoute> = asyn
   const result = await db.insert(commentTable).values(body).returning();
   const data = result[0];
 
-  nilThrowError(data, "The comment create filed");
+  if (!data)
+    throw new Error("The comment create filed");
 
   return successResponse(c, data);
 };
@@ -55,7 +56,9 @@ export const commentDeleteHandler: AppRouteHandler<RT.CommentDeleteRoute> = asyn
     )
     .returning();
   const data = result[0];
-  nilThrowError(data, `The article comment not found,id = ${commentId}`);
+
+  if (!data)
+    throw new Error(`The comment not found,id = ${commentId}`);
 
   return successResponse(c, data);
 };

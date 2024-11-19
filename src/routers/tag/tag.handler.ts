@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/tag/tag.router";
 
-import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
+import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { articleTable } from "@/drizzle/schemas/article";
 import { articleToTagTable } from "@/drizzle/schemas/article-to-tag";
@@ -19,7 +19,8 @@ export const tagGetHandler: AppRouteHandler<RT.TagGetRoute> = async (c) => {
     where: eq(tagTable.id, id),
   });
 
-  nilThrowError(data, `The tag not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The tag not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -49,7 +50,8 @@ export const tagCreateHandler: AppRouteHandler<RT.TagCreateRoute> = async (c) =>
   const result = await db.insert(tagTable).values(body).returning();
   const data = result[0];
 
-  nilThrowError(data, "The tag create filed");
+  if (!data)
+    throw new Error("The tag create filed");
 
   return successResponse(c, data);
 };
@@ -65,7 +67,8 @@ export const tagUpdateHandler: AppRouteHandler<RT.TagUpdateRoute> = async (c) =>
 
   const data = result[0];
 
-  nilThrowError(data, `The tag not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The tag not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -78,7 +81,8 @@ export const tagDeleteHandler: AppRouteHandler<RT.TagDeleteRoute> = async (c) =>
   const result = await db.delete(tagTable).where(eq(tagTable.id, id)).returning();
   const data = result[0];
 
-  nilThrowError(data, `The tag not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The tag not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -111,7 +115,8 @@ export const articleTagsCreateHandler: AppRouteHandler<RT.ArticleTagsCreateRoute
     where: eq(articleTable.id, articleId),
     with: { tags: true },
   });
-  nilThrowError(article, `The article not found,id = ${articleId}`);
+  if (!article)
+    throw new Error(`The article not found,id = ${articleId}`);
 
   return successResponse(c, article);
 };

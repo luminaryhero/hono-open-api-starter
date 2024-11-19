@@ -52,16 +52,6 @@ export function successResponse(c: Context, data: any): any {
 }
 
 /**
- * If data is null or undefined, throw an error with given message.
- * @param {any} data
- * @param {string} message
- */
-export function nilThrowError<T>(data: T, message: string) {
-  if (typeof data === "undefined" || data === null)
-    throw new Error(message || "error");
-}
-
-/**
  * 序列化响应数据
  * @param data
  * @returns
@@ -123,7 +113,7 @@ export async function asyncVerifyToken(token: string, c: Context<AppEnv>): Promi
   const payload = await verify(token, env.JWT_SECRET);
 
   const username = payload?.sub;
-  if (!username || typeof username !== "string")
+  if (typeof username !== "string")
     return false;
 
   const user = await db.query.userTable.findFirst({

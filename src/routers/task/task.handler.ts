@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/task/task.router";
 
-import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
+import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { taskTable } from "@/drizzle/schemas/task";
 
@@ -17,7 +17,8 @@ export const taskGetHandler: AppRouteHandler<RT.TaskGetRoute> = async (c) => {
     where: eq(taskTable.id, id),
   });
 
-  nilThrowError(data, `The task not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The task not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -48,7 +49,8 @@ export const taskCreateHandler: AppRouteHandler<RT.TaskCreateRoute> = async (c) 
   const result = await db.insert(taskTable).values(body).returning();
   const data = result[0];
 
-  nilThrowError(data, "The task create filed");
+  if (!data)
+    throw new Error("The task create filed");
 
   return successResponse(c, data);
 };
@@ -64,7 +66,8 @@ export const taskUpdateHandler: AppRouteHandler<RT.TaskUpdateRoute> = async (c) 
 
   const data = result[0];
 
-  nilThrowError(data, `The task not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The task not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -77,7 +80,8 @@ export const taskDeleteHandler: AppRouteHandler<RT.TaskDeleteRoute> = async (c) 
   const result = await db.delete(taskTable).where(eq(taskTable.id, id)).returning();
   const data = result[0];
 
-  nilThrowError(data, `The task not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The task not found,id = ${id}`);
 
   return successResponse(c, data);
 };

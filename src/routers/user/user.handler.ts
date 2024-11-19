@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/user/user.router";
 
-import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
+import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { userTable } from "@/drizzle/schemas/user";
 
@@ -17,7 +17,8 @@ export const userGetHandler: AppRouteHandler<RT.UserGetRoute> = async (c) => {
     where: eq(userTable.id, id),
   });
 
-  nilThrowError(data, `The user not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The user not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -47,7 +48,8 @@ export const userCreateHandler: AppRouteHandler<RT.UserCreateRoute> = async (c) 
   const result = await db.insert(userTable).values(body).returning();
   const data = result[0];
 
-  nilThrowError(data, "The user create filed");
+  if (!data)
+    throw new Error("The user create filed");
 
   return successResponse(c, data);
 };
@@ -63,7 +65,8 @@ export const userUpdateHandler: AppRouteHandler<RT.UserUpdateRoute> = async (c) 
 
   const data = result[0];
 
-  nilThrowError(data, `The user not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The user not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -76,7 +79,8 @@ export const userDeleteHandler: AppRouteHandler<RT.UserDeleteRoute> = async (c) 
   const result = await db.delete(userTable).where(eq(userTable.id, id)).returning();
   const data = result[0];
 
-  nilThrowError(data, `The user not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The user not found,id = ${id}`);
 
   return successResponse(c, data);
 };

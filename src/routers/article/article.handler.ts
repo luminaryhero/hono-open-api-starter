@@ -3,7 +3,7 @@ import { eq, inArray } from "drizzle-orm";
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/article/article.router";
 
-import { nilThrowError, paginate, successResponse } from "@/common/helpers/util";
+import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
 import { articleTable } from "@/drizzle/schemas/article";
 import { userTable } from "@/drizzle/schemas/user";
@@ -22,7 +22,9 @@ export const articleGetHandler: AppRouteHandler<RT.ArticleGetRoute> = async (c) 
     },
   });
 
-  nilThrowError(data, `The article not found,id = ${id}`);
+  if (!data) {
+    throw new Error(`The article not found,id = ${id}`);
+  }
 
   return successResponse(c, data);
 };
@@ -56,7 +58,8 @@ export const articleCreateHandler: AppRouteHandler<RT.ArticleCreateRoute> = asyn
   const result = await db.insert(articleTable).values(body).returning();
   const data = result[0];
 
-  nilThrowError(data, "The article create filed");
+  if (!data)
+    throw new Error("The article create filed");
 
   return successResponse(c, data);
 };
@@ -72,7 +75,8 @@ export const articleUpdateHandler: AppRouteHandler<RT.ArticleUpdateRoute> = asyn
 
   const data = result[0];
 
-  nilThrowError(data, `The article not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The article not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -85,7 +89,8 @@ export const articleDeleteHandler: AppRouteHandler<RT.ArticleDeleteRoute> = asyn
   const result = await db.delete(articleTable).where(eq(articleTable.id, id)).returning();
   const data = result[0];
 
-  nilThrowError(data, `The article not found,id = ${id}`);
+  if (!data)
+    throw new Error(`The article not found,id = ${id}`);
 
   return successResponse(c, data);
 };
@@ -121,25 +126,27 @@ export const favArticlePostHandler: AppRouteHandler<RT.FavArticlePostRoute> = as
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
   });
-  nilThrowError(user, `The user not found,username = ${username}`);
+  if (!user)
+    throw new Error(`The user not found,username = ${username}`);
 
   // 查询文章
   const article = await db.query.articleTable.findFirst({
     where: eq(articleTable.slug, slug),
   });
-  nilThrowError(article, `The article not found,slug = ${slug}`);
+  if (!article)
+    throw new Error(`The article not found,slug = ${slug}`);
 
   // 收藏文章
-  const favorites = user?.favorites || [];
-  if (favorites.includes(article!.id)) {
-    nilThrowError(null, `The article has been favored,id = ${article!.id}`);
+  const favorites = user.favorites || [];
+  if (favorites.includes(article.id)) {
+    throw new Error(`The article has been favored,id = ${article.id}`);
   }
-  favorites.push(article!.id);
+  favorites.push(article.id);
 
   const result = await db
     .update(userTable)
     .set({ favorites })
-    .where(eq(userTable.id, user!.id))
+    .where(eq(userTable.id, user.id))
     .returning();
 
   const data = result[0];
@@ -182,13 +189,14 @@ export const favArticleDeleteHandler: AppRouteHandler<RT.FavArticleDeleteRoute> 
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.id, userId),
   });
-  nilThrowError(user, `The user not found,id = ${userId}`);
+  if (!user)
+    throw new Error(`The user not found,id = ${userId}`);
 
   const favorites = user?.favorites || [];
 
   const index = favorites.indexOf(articleId);
   if (index === -1) {
-    nilThrowError(null, `The article has not been favored,id = ${articleId}`);
+    throw new Error(`The article has not been favored,id = ${articleId}`);
   }
   favorites.splice(index, 1);
 
