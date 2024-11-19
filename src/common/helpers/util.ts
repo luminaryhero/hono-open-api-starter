@@ -115,19 +115,22 @@ function serialize<T extends R | PR>(data: T): T {
 /**
  * 异步校验Token
  */
-export async function asyncVerifyToken(token: string, _c: Context<AppEnv>): Promise<boolean> {
+export async function asyncVerifyToken(token: string, c: Context<AppEnv>): Promise<boolean> {
   if (!token) {
     throw new Error("未传入Token");
   }
 
-  const { sub: username } = await verify(token, env.JWT_SECRET);
+  const payload = await verify(token, env.JWT_SECRET);
 
+  const username = payload?.sub;
   if (!username || typeof username !== "string")
     return false;
 
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
   });
+
+  c.set("jwtPayload", payload);
 
   return !!user;
 }

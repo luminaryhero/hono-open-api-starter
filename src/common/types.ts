@@ -12,12 +12,12 @@ export interface JWT_PAYLOAD extends JWTPayload {
 /**
  * App环境变量
  */
-export interface AppEnv {
+export type AppEnv = {
   Variables: {
     logger: PinoLogger;
     jwt: JwtVariables<JWT_PAYLOAD>;
   };
-}
+} | never;
 
 /**
  * App类型
