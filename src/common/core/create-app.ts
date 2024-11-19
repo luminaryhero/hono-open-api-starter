@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
-import defaultHook from "../helpers/openapi";
+import { defaultHook } from "../helpers/openapi";
 import notFound from "../middlewares/not-found";
 import onError from "../middlewares/on-error";
 

@@ -1,11 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
+import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
+import { idParamsSchema, pageParamsSchema, slugParamsSchema } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
-import IdParamsSchema from "@/common/schemas/id-params";
-import PageParamsSchema from "@/common/schemas/page-params";
-import SlugParamsSchema from "@/common/schemas/slug-params";
 import { articleSchema } from "@/drizzle/schemas/article";
 import * as handler from "@/routers/article/article.handler";
 
@@ -18,7 +16,7 @@ const articleGetRoute = createRoute({
   method: "get",
   path: "/article/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(articleSchema),
@@ -34,7 +32,7 @@ const articleListRoute = createRoute({
   method: "get",
   path: "/article",
   request: {
-    query: PageParamsSchema,
+    query: pageParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonPageResponse(articleSchema),
@@ -75,7 +73,7 @@ const articleUpdateRoute = createRoute({
   method: "put",
   path: "/article/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
     body: jsonContent(
       articleSchema
         .omit({
@@ -103,7 +101,7 @@ const articleDeleteRoute = createRoute({
   method: "delete",
   path: "/article/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(articleSchema),
@@ -122,7 +120,7 @@ const authorArticlesRoute = createRoute({
     query: z.object({
       author: z.string().pipe(z.coerce.number()),
     })
-      .merge(PageParamsSchema),
+      .merge(pageParamsSchema),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonPageResponse(articleSchema),
@@ -138,12 +136,12 @@ const favArticlePostRoute = createRoute({
   method: "post",
   path: "/favArticles/{slug}",
   request: {
-    params: SlugParamsSchema,
+    params: slugParamsSchema,
     body: jsonContent(
       z.object({
         username: z.string(),
       })
-        .merge(PageParamsSchema),
+        .merge(pageParamsSchema),
     ),
   },
   responses: {
@@ -163,7 +161,7 @@ const favArticlesRoute = createRoute({
     query: z.object({
       username: z.string(),
     })
-      .merge(PageParamsSchema),
+      .merge(pageParamsSchema),
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(articleSchema),

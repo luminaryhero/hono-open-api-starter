@@ -1,59 +1,52 @@
 import { z } from "zod";
 
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-expect-error
-type ZodSchema = z.ZodUnion | z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
+export const idParamsSchema = z.object({
+  id: z.string().transform(Number).pipe(z.coerce.number()),
+});
 
-export function jsonContent<
-  T extends ZodSchema,
->(schema: T, description: string = "") {
-  return {
-    content: {
-      "application/json": {
-        schema,
-      },
+export const IdUUidParamsSchema = z.object({
+  id: z.string().uuid().openapi({
+    param: {
+      name: "id",
+      in: "path",
     },
-    description,
-  };
-}
+    required: ["id"],
+    example: "4651e634-a530-4484-9b09-9616a28f35e3",
+  }),
+});
 
-export function jsonResponse<
-  T extends ZodSchema,
->(schema: T, description: string = "") {
-  return {
-    content: {
-      "application/json": {
-        schema: z.object({
-          code: z.number(),
-          data: schema,
-          message: z.string(),
-        }),
-      },
+export const pageParamsSchema = z.object({
+  page: z.string().transform(Number).pipe(z.coerce.number().min(1)).default("1").optional().openapi({
+    param: {
+      name: "page",
+      in: "query",
+      required: false,
+      description: "页码",
     },
-    description,
-  };
-}
+  }),
+  pageSize: z.string().transform(Number).pipe(z.coerce.number().min(1)).optional().default("10").openapi({
+    param: {
+      name: "pageSize",
+      in: "query",
+      required: false,
+      description: "每页条数",
+    },
+  }),
+});
 
-export function jsonPageResponse<
-  T extends ZodSchema,
->(schema: T, description: string = "") {
-  return {
-    content: {
-      "application/json": {
-        schema: z.object({
-          code: z.number(),
-          data: z.object({
-            meta: z.object({
-              total: z.number(),
-              page: z.number(),
-              pageSize: z.number(),
-            }),
-            items: z.array(schema),
-          }),
-          message: z.string(),
-        }),
+// Regular expression to validate slug format: alphanumeric, underscores, and dashes
+const slugReg = /^[\w-]+$/;
+const SLUG_ERROR_MESSAGE = "Slug can only contain letters, numbers, dashes, and underscores";
+
+export const slugParamsSchema = z.object({
+  slug: z.string()
+    .regex(slugReg, SLUG_ERROR_MESSAGE)
+    .openapi({
+      param: {
+        name: "slug",
+        in: "path",
       },
-    },
-    description,
-  };
-}
+      required: ["slug"],
+      example: "my-cool-article",
+    }),
+});

@@ -1,10 +1,9 @@
 import { createRoute } from "@hono/zod-openapi";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
+import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
+import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
-import IdParamsSchema from "@/common/schemas/id-params";
-import PageParamsSchema from "@/common/schemas/page-params";
 import { taskSchema } from "@/drizzle/schemas/task";
 import * as handler from "@/routers/task/task.handler";
 
@@ -17,7 +16,7 @@ const taskGetRoute = createRoute({
   method: "get",
   path: "/task/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(taskSchema),
@@ -33,7 +32,7 @@ const taskListRoute = createRoute({
   method: "get",
   path: "/task",
   request: {
-    query: PageParamsSchema,
+    query: pageParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonPageResponse(taskSchema),
@@ -72,7 +71,7 @@ const taskUpdateRoute = createRoute({
   method: "put",
   path: "/task/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
     body: jsonContent(
       taskSchema
         .omit({
@@ -97,7 +96,7 @@ const taskDeleteRoute = createRoute({
   method: "delete",
   path: "/task/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(taskSchema),

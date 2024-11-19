@@ -1,10 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/schema";
+import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
+import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
-import IdParamsSchema from "@/common/schemas/id-params";
-import PageParamsSchema from "@/common/schemas/page-params";
 import { tagSchema } from "@/drizzle/schemas/tag";
 import * as handler from "@/routers/tag/tag.handler";
 
@@ -17,7 +16,7 @@ const tagGetRoute = createRoute({
   method: "get",
   path: "/tag/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(tagSchema),
@@ -33,7 +32,7 @@ const tagListRoute = createRoute({
   method: "get",
   path: "/tag",
   request: {
-    query: PageParamsSchema,
+    query: pageParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonPageResponse(tagSchema),
@@ -70,7 +69,7 @@ const tagUpdateRoute = createRoute({
   method: "put",
   path: "/tag/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
     body: jsonContent(
       tagSchema
         .omit({
@@ -93,7 +92,7 @@ const tagDeleteRoute = createRoute({
   method: "delete",
   path: "/tag/{id}",
   request: {
-    params: IdParamsSchema,
+    params: idParamsSchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(tagSchema),

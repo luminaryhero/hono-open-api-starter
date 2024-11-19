@@ -3,7 +3,7 @@ import { bearerAuth } from "hono/bearer-auth";
 import { cache } from "hono/cache";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
-import { jsonContent, jsonResponse } from "@/common/helpers/schema";
+import { jsonContent, jsonResponse } from "@/common/helpers/openapi";
 import { asyncVerifyToken } from "@/common/helpers/util";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import { userSchema } from "@/drizzle/schemas/user";
