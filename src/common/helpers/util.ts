@@ -112,7 +112,7 @@ export async function asyncVerifyToken(token: string, c: Context<AppEnv>): Promi
 
   const payload = await verify(token, env.JWT_SECRET);
 
-  const username = payload?.sub;
+  const username = payload?.name;
   if (typeof username !== "string")
     return false;
 

@@ -30,7 +30,8 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
   }
 
   const payload: JWT_PAYLOAD = {
-    sub: username,
+    sub: user.id,
+    name: user.username,
     role: "admin",
     exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
   };
@@ -78,7 +79,7 @@ export const userInfoHandler: AppRouteHandler<RT.UserInfoRoute> = async (c) => {
   const payload = c.get("jwtPayload");
 
   const user = await db.query.userTable.findFirst({
-    where: eq(userTable.username, payload.sub),
+    where: eq(userTable.username, payload.name),
   });
   if (user === undefined) {
     throw new Error(`The user not found`);
