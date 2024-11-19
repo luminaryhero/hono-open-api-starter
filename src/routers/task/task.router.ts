@@ -8,6 +8,9 @@ import PageParamsSchema from "@/common/schemas/page-params";
 import { taskSchema } from "@/drizzle/schemas/task";
 import * as handler from "@/routers/task/task.handler";
 
+/**
+ * 查找任务
+ */
 const taskGetRoute = createRoute({
   summary: "查找任务",
   tags: ["Task"],
@@ -21,6 +24,9 @@ const taskGetRoute = createRoute({
   },
 });
 
+/**
+ * 任务列表
+ */
 const taskListRoute = createRoute({
   summary: "任务列表",
   tags: ["Task"],
@@ -34,6 +40,9 @@ const taskListRoute = createRoute({
   },
 });
 
+/**
+ * 新增任务
+ */
 const taskCreateRoute = createRoute({
   summary: "新增任务",
   tags: ["Task"],
@@ -54,6 +63,9 @@ const taskCreateRoute = createRoute({
   },
 });
 
+/**
+ * 更新任务
+ */
 const taskUpdateRoute = createRoute({
   summary: "更新任务",
   tags: ["Task"],
@@ -76,6 +88,9 @@ const taskUpdateRoute = createRoute({
   },
 });
 
+/**
+ * 删除任务
+ */
 const taskDeleteRoute = createRoute({
   summary: "删除任务",
   tags: ["Task"],

@@ -9,6 +9,9 @@ import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/auth/auth.handler";
 
+/**
+ * 登录
+ */
 const loginRoute = createRoute({
   summary: "登录",
   tags: ["Auth"],
@@ -31,6 +34,9 @@ const loginRoute = createRoute({
   },
 });
 
+/**
+ * 注册
+ */
 const registerRoute = createRoute({
   summary: "注册",
   tags: ["Auth"],

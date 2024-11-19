@@ -8,6 +8,9 @@ import PageParamsSchema from "@/common/schemas/page-params";
 import { tagSchema } from "@/drizzle/schemas/tag";
 import * as handler from "@/routers/tag/tag.handler";
 
+/**
+ * 查找标签
+ */
 const tagGetRoute = createRoute({
   summary: "查找标签",
   tags: ["Tag"],
@@ -21,6 +24,9 @@ const tagGetRoute = createRoute({
   },
 });
 
+/**
+ * 标签列表
+ */
 const tagListRoute = createRoute({
   summary: "标签列表",
   tags: ["Tag"],
@@ -34,6 +40,9 @@ const tagListRoute = createRoute({
   },
 });
 
+/**
+ * 新增标签
+ */
 const tagCreateRoute = createRoute({
   summary: "新增标签",
   tags: ["Tag"],
@@ -52,6 +61,9 @@ const tagCreateRoute = createRoute({
   },
 });
 
+/**
+ * 更新标签
+ */
 const tagUpdateRoute = createRoute({
   summary: "更新标签",
   tags: ["Tag"],
@@ -72,6 +84,9 @@ const tagUpdateRoute = createRoute({
   },
 });
 
+/**
+ * 删除标签
+ */
 const tagDeleteRoute = createRoute({
   summary: "删除标签",
   tags: ["Tag"],

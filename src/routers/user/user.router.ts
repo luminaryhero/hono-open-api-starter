@@ -8,6 +8,9 @@ import PageParamsSchema from "@/common/schemas/page-params";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/user/user.handler";
 
+/**
+ * 查找用户
+ */
 const userGetRoute = createRoute({
   summary: "查找用户",
   tags: ["User"],
@@ -21,6 +24,9 @@ const userGetRoute = createRoute({
   },
 });
 
+/**
+ * 用户列表
+ */
 const userListRoute = createRoute({
   summary: "用户列表",
   tags: ["User"],
@@ -34,6 +40,9 @@ const userListRoute = createRoute({
   },
 });
 
+/**
+ * 新增用户
+ */
 const userCreateRoute = createRoute({
   summary: "新增用户",
   tags: ["User"],
@@ -49,6 +58,9 @@ const userCreateRoute = createRoute({
   },
 });
 
+/**
+ * 更新用户
+ */
 const userUpdateRoute = createRoute({
   summary: "更新用户",
   tags: ["User"],
@@ -63,6 +75,9 @@ const userUpdateRoute = createRoute({
   },
 });
 
+/**
+ * 删除用户
+ */
 const userDeleteRoute = createRoute({
   summary: "删除用户",
   tags: ["User"],

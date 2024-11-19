@@ -7,6 +7,9 @@ import PageParamsSchema from "@/common/schemas/page-params";
 import { commentSchema } from "@/drizzle/schemas/comment";
 import * as handler from "@/routers/comment/comment.handler";
 
+/**
+ * 评论列表
+ */
 const commentListRoute = createRoute({
   summary: "评论列表",
   tags: ["Comment"],
@@ -23,6 +26,9 @@ const commentListRoute = createRoute({
   },
 });
 
+/**
+ * 新增评论
+ */
 const commentCreateRoute = createRoute({
   summary: "新增评论",
   tags: ["Comment"],
@@ -42,6 +48,9 @@ const commentCreateRoute = createRoute({
   },
 });
 
+/**
+ * 删除评论
+ */
 const commentDeleteRoute = createRoute({
   summary: "删除评论",
   tags: ["Comment"],

@@ -9,6 +9,9 @@ import SlugParamsSchema from "@/common/schemas/slug-params";
 import { articleSchema } from "@/drizzle/schemas/article";
 import * as handler from "@/routers/article/article.handler";
 
+/**
+ * 查找文章
+ */
 const articleGetRoute = createRoute({
   summary: "查找文章",
   tags: ["Article"],
@@ -22,6 +25,9 @@ const articleGetRoute = createRoute({
   },
 });
 
+/**
+ * 文章列表
+ */
 const articleListRoute = createRoute({
   summary: "文章列表",
   tags: ["Article"],
@@ -35,6 +41,9 @@ const articleListRoute = createRoute({
   },
 });
 
+/**
+ * 新增文章
+ */
 const articleCreateRoute = createRoute({
   summary: "新增文章",
   tags: ["Article"],
@@ -57,6 +66,9 @@ const articleCreateRoute = createRoute({
   },
 });
 
+/**
+ * 更新文章
+ */
 const articleUpdateRoute = createRoute({
   summary: "更新文章",
   tags: ["Article"],
@@ -82,6 +94,9 @@ const articleUpdateRoute = createRoute({
   },
 });
 
+/**
+ * 删除文章
+ */
 const articleDeleteRoute = createRoute({
   summary: "删除文章",
   tags: ["Article"],
