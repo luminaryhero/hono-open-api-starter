@@ -2,10 +2,10 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { bearerAuth } from "hono/bearer-auth";
 import { cache } from "hono/cache";
 
+import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonResponse } from "@/common/helpers/openapi";
 import { verifyToken } from "@/common/helpers/util";
-import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/auth/auth.handler";
 

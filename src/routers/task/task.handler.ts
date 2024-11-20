@@ -30,7 +30,6 @@ export const taskListHandler: AppRouteHandler<RT.TaskListRoute> = async (c) => {
   const { page = 1, pageSize = 10 } = await c.req.valid("query");
 
   const result = await db.query.taskTable.findMany({
-    where: eq(taskTable.done, true),
     orderBy: (taskTable, { asc }) => asc(taskTable.id),
   });
 

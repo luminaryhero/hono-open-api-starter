@@ -4,7 +4,6 @@ import { z } from "zod";
 export const taskTable = pgTable("task_table", {
   id: serial("id").primaryKey(),
   name: text("name").notNull().unique(),
-  done: boolean("done").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
 });

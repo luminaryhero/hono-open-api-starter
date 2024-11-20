@@ -3,20 +3,13 @@ import type { PinoLogger } from "hono-pino";
 import type { JwtVariables } from "hono/jwt";
 import type { JWTPayload } from "hono/utils/jwt/types";
 
-export interface JWT_PAYLOAD extends JWTPayload {
-  sub: number;
-  name: string;
-  role: string;
-  exp: number;
-}
-
 /**
  * App环境变量
  */
 export interface AppEnv {
   Variables: {
     logger: PinoLogger;
-    jwt: JwtVariables<JWT_PAYLOAD>;
+    jwt: JwtVariables;
   };
 }
 

@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
 
-import type { AppRouteHandler, JWT_PAYLOAD } from "@/common/types";
+import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/auth/auth.router";
 
 import { successResponse } from "@/common/helpers/util";
@@ -29,7 +29,7 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
     throw new Error(`username or password is incorrect`);
   }
 
-  const payload: JWT_PAYLOAD = {
+  const payload = {
     sub: user.id,
     name: user.username,
     role: user.role || "user",
@@ -46,7 +46,7 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
  * 注册
  */
 export const registerHandler: AppRouteHandler<RT.RegisterRoute> = async (c) => {
-  const { username, password, email } = await c.req.valid("json");
+  const { username, password } = await c.req.valid("json");
 
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
@@ -65,7 +65,6 @@ export const registerHandler: AppRouteHandler<RT.RegisterRoute> = async (c) => {
     .values({
       username,
       password: hash,
-      email,
     })
     .returning();
 
