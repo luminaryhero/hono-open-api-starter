@@ -1,9 +1,9 @@
-import { createRoute } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 
+import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
-import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import checkAuth from "@/common/middlewares/check-auth";
 import { roleSchema } from "@/drizzle/schemas/role";
 import * as handler from "@/routers/role/role.handler";
@@ -124,18 +124,46 @@ const roleDeleteRoute = createRoute({
   },
 });
 
+/**
+ * 分配角色权限
+ */
+const roleAssignPermissionRoute = createRoute({
+  summary: "分配角色权限",
+  tags: ["Role"],
+  method: "post",
+  path: "/role-permission",
+  security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ roles: ["admin"] }),
+  ] as const,
+  request: {
+    body: jsonContent(
+      roleSchema
+        .omit({
+          createdAt: true,
+          updatedAt: true,
+        }),
+    ),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(roleSchema),
+  },
+});
+
 const router
   = createOpenAPIRouter()
     .openapi(roleGetRoute, handler.roleGetHandler)
     .openapi(roleListRoute, handler.roleListHandler)
     .openapi(roleCreateRoute, handler.roleCreateHandler)
     .openapi(roleUpdateRoute, handler.roleUpdateHandler)
-    .openapi(roleDeleteRoute, handler.roleDeleteHandler);
+    .openapi(roleDeleteRoute, handler.roleDeleteHandler)
+    .openapi(roleAssignPermissionRoute, handler.roleAssignPermissionHandler);
 
 export type RoleGetRoute = typeof roleGetRoute;
 export type RoleListRoute = typeof roleListRoute;
 export type RoleCreateRoute = typeof roleCreateRoute;
 export type RoleUpdateRoute = typeof roleUpdateRoute;
 export type RoleDeleteRoute = typeof roleDeleteRoute;
+export type RoleAssignPermissionRoute = typeof roleAssignPermissionRoute;
 
 export default router;

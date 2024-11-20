@@ -1,11 +1,13 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/role/role.router";
 
 import { paginate, successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
+import { permissionTable } from "@/drizzle/schemas/permission";
 import { roleTable } from "@/drizzle/schemas/role";
+import { roleToPermissionTable } from "@/drizzle/schemas/role-to-permission";
 
 /**
  * Get a role by id
@@ -89,4 +91,39 @@ export const roleDeleteHandler: AppRouteHandler<RT.RoleDeleteRoute> = async (c) 
     throw new Error(`The role not found,id = ${id}`);
 
   return successResponse(c, data);
+};
+
+/**
+ * 分配角色权限
+ */
+export const roleAssignPermissionHandler: AppRouteHandler<RT.RoleAssignPermissionRoute> = async (c) => {
+  const { id, permissions } = await c.req.valid("json");
+
+  if (permissions.length === 0)
+    throw new Error(`The permissions length is 0,id = ${id}`);
+
+  // 查询数据库中的真实权限
+  const realPermissions = await db.query.permissionTable.findMany({
+    where: inArray(permissionTable.id, permissions.map(perm => perm.id)),
+  });
+
+  // 准备要插入的数据
+  const roleToPermRows = realPermissions.map(perm => ({ roleId: id, permissionId: perm.id }));
+
+  // 保存数据
+  await db.transaction(async (tx) => {
+    await tx.delete(roleToPermissionTable).where(eq(roleToPermissionTable.roleId, id));
+
+    await tx.insert(roleToPermissionTable).values(roleToPermRows);
+  });
+
+  // 返回结果
+  const result = await db.query.roleTable.findFirst({
+    where: eq(roleTable.id, id),
+    with: {
+      permissions: true,
+    },
+  });
+
+  return successResponse(c, result);
 };

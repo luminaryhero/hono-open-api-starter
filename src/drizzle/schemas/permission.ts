@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
-import { roleToPermTable } from "./role-to-perm";
+import { roleToPermissionTable } from "./role-to-permission";
 
 export const permissionTable = pgTable("permission_table", {
   id: serial("id").primaryKey(),
@@ -12,7 +12,7 @@ export const permissionTable = pgTable("permission_table", {
 });
 
 export const permissionRelations = relations(permissionTable, ({ many }) => ({
-  roles: many(roleToPermTable),
+  roles: many(roleToPermissionTable),
 }));
 
 export const permissionSchema = z.object({

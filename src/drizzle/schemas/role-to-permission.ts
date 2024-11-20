@@ -5,35 +5,35 @@ import { z } from "zod";
 import { permissionTable } from "./permission";
 import { roleTable } from "./role";
 
-export const roleToPermTable = pgTable("role_to_perm_table", {
+export const roleToPermissionTable = pgTable("role_to_perm_table", {
   roleId: integer("role_id")
     .notNull()
     .references(() => roleTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  permId: integer("perm_id")
+  permissionId: integer("permission_id")
     .notNull()
     .references(() => permissionTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
 }, t => ({
-  pk: primaryKey({ columns: [t.roleId, t.permId] }),
+  pk: primaryKey({ columns: [t.roleId, t.permissionId] }),
 }));
 
-export const roleToPermRelationsTable = relations(roleToPermTable, ({ one }) => ({
+export const roleToPermissionRelations = relations(roleToPermissionTable, ({ one }) => ({
   role: one(roleTable, {
-    fields: [roleToPermTable.roleId],
+    fields: [roleToPermissionTable.roleId],
     references: [roleTable.id],
   }),
   permission: one(permissionTable, {
-    fields: [roleToPermTable.permId],
+    fields: [roleToPermissionTable.permissionId],
     references: [permissionTable.id],
   }),
 }));
 
-export const roleToPermSchema = z.object({
+export const roleToPermissionSchema = z.object({
   roleId: z.number(),
-  permId: z.number(),
+  permissionId: z.number(),
 });

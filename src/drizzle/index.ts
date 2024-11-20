@@ -7,8 +7,9 @@ import env from "@/env";
 import * as articleSchema from "./schemas/article";
 import * as articleToTagSchema from "./schemas/article-to-tag";
 import * as commentSchema from "./schemas/comment";
+import * as permissionSchema from "./schemas/permission";
 import * as roleSchema from "./schemas/role";
-import * as roleToPermSchema from "./schemas/role-to-perm";
+import * as roleToPermSchema from "./schemas/role-to-permission";
 import * as tagSchema from "./schemas/tag";
 import * as taskSchema from "./schemas/task";
 import * as userSchema from "./schemas/user";
@@ -24,6 +25,7 @@ const schema = {
   ...roleSchema,
   ...userToRoleSchema,
   ...roleToPermSchema,
+  ...permissionSchema,
 };
 
 const logger = new DefaultLogger();
