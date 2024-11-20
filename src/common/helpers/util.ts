@@ -12,14 +12,7 @@ import env from "@/env";
 import type { AppEnv, PR, R } from "../types";
 
 /**
- * Paginate a list of items, given a page and page size.
- *
- * @param {any[]} items The list of items to paginate.
- * @param {number} page The page number to return.
- * @param {number} pageSize The number of items per page.
- * @returns {object} An object with two properties: "meta" and "items". "meta" contains
- *   the total number of items, the current page, and the page size. "items" is an array
- *   of the items for the given page.
+ * 响应数据分页
  */
 export function paginate(items: any[], page: number = 1, pageSize: number = 10) {
   return {
@@ -53,8 +46,6 @@ export function successResponse(c: Context, data: any): any {
 
 /**
  * 序列化响应数据
- * @param data
- * @returns
  */
 function serialize<T extends R | PR>(data: T): T {
   const safeFields = ["password"];
@@ -103,7 +94,7 @@ function serialize<T extends R | PR>(data: T): T {
 }
 
 /**
- * 异步校验Token
+ * 校验Token
  */
 export async function verifyToken(token: string, c: Context<AppEnv>): Promise<boolean> {
   if (!token) {

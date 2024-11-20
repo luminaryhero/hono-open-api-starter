@@ -1,13 +1,8 @@
-/**
- * @module
- * Basic Auth Middleware for Hono.
- */
-
 import type { MiddlewareHandler } from "hono/types";
 
 import { HTTPException } from "hono/http-exception";
 
-interface BasicAuthOptions {
+interface AuthOptions {
   roles?: string[];
   permissions?: string[];
 }
@@ -15,15 +10,14 @@ interface BasicAuthOptions {
 /**
  * Role and Permission Auth Middleware for Hono.
  */
-function checkAuth(options: BasicAuthOptions): MiddlewareHandler {
+function checkAuth(options: AuthOptions): MiddlewareHandler {
   const { roles, permissions } = options;
 
-  return async function basicAuth(ctx, next) {
+  return async function checkAuth(ctx, next) {
     const jwtPayload = ctx.get("jwtPayload");
     const currentRole = jwtPayload?.role || "user";
     const userPermissions = jwtPayload?.permissions || [];
 
-    console.log("currentRole", jwtPayload);
     if (roles && !roles.includes(currentRole)) {
       throw new HTTPException(401, {
         message: "Current role Unauthorized",
