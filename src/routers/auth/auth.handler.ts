@@ -1,12 +1,13 @@
 import * as bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { sign } from "hono/jwt";
 
-import type { AppRouteHandler, JWT_PAYLOAD } from "@/common/types";
+import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/auth/auth.router";
 
 import { successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
+import { roleTable } from "@/drizzle/schemas/role";
 import { userTable } from "@/drizzle/schemas/user";
 import env from "@/env";
 
@@ -18,6 +19,9 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
 
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.username, username),
+    with: {
+      roles: true,
+    },
   });
   if (user === undefined) {
     throw new Error(`username or password is incorrect`);
@@ -29,10 +33,22 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
     throw new Error(`username or password is incorrect`);
   }
 
-  const payload: JWT_PAYLOAD = {
+  // 获取角色名列表
+  const roleIds = user.roles.map(role => role.roleId);
+  const roles = await db.query.roleTable.findMany({
+    columns: {
+      name: true,
+    },
+    where: inArray(roleTable.id, roleIds),
+  });
+
+  const roleNames = roles.map(role => role.name);
+
+  console.log({ roleNames });
+  const payload = {
     sub: user.id,
     name: user.username,
-    role: user.role || "user",
+    roles: roleNames || ["user"],
     exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
   };
 
