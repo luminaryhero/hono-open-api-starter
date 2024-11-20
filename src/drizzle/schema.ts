@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, foreignKey, integer, pgTable, primaryKey, serial, text, timestamp, unique } from "drizzle-orm/pg-core";
+import { boolean, foreignKey, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp, unique } from "drizzle-orm/pg-core";
 
 export const commentTable = pgTable("comment_table", {
   id: serial().primaryKey().notNull(),
@@ -26,6 +26,7 @@ export const userTable = pgTable("user_table", {
   username: text().notNull(),
   email: text().notNull(),
   password: text().notNull(),
+  role: text("role", { enum: ["user", "admin"] }).default("user"),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).defaultNow(),
   bio: text(),

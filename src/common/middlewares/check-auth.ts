@@ -23,16 +23,17 @@ function checkAuth(options: BasicAuthOptions): MiddlewareHandler {
     const currentRole = jwtPayload?.role || "user";
     const userPermissions = jwtPayload?.permissions || [];
 
+    console.log("currentRole", jwtPayload);
     if (roles && !roles.includes(currentRole)) {
       throw new HTTPException(401, {
-        message: "Unauthorized",
+        message: "Current role Unauthorized",
       });
     }
 
     if (permissions && permissions.length > 0) {
       if (!permissions.every(permission => userPermissions.includes(permission))) {
         throw new HTTPException(401, {
-          message: "Unauthorized",
+          message: "Current permission Unauthorized",
         });
       }
     }
