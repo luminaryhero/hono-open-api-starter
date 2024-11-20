@@ -5,7 +5,7 @@ import { cache } from "hono/cache";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonResponse } from "@/common/helpers/openapi";
 import { verifyToken } from "@/common/helpers/util";
-import * as HttpStatusCodes from "@/common/lib/http-status-codes";
+import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/auth/auth.handler";
 
