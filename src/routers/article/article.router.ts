@@ -4,7 +4,6 @@ import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema, slugParamsSchema } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
-import checkAuth from "@/common/middlewares/check-auth";
 import { articleSchema } from "@/drizzle/schemas/article";
 import * as handler from "@/routers/article/article.handler";
 

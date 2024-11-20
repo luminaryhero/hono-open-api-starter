@@ -17,6 +17,9 @@ const userGetRoute = createRoute({
   method: "get",
   path: "/user/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ roles: ["admin"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
   },
@@ -54,6 +57,9 @@ const userCreateRoute = createRoute({
   method: "post",
   path: "/user",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ roles: ["admin"] }),
+  ] as const,
   request: {
     body: jsonContent(
       userSchema.omit({ id: true, createdAt: true, updatedAt: true }),
@@ -73,6 +79,9 @@ const userUpdateRoute = createRoute({
   method: "put",
   path: "/user/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ roles: ["admin"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
     body: jsonContent(userSchema.omit({ id: true, createdAt: true, updatedAt: true }).partial()),
@@ -91,6 +100,9 @@ const userDeleteRoute = createRoute({
   method: "delete",
   path: "/user/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ roles: ["admin"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
   },
