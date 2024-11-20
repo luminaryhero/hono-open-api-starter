@@ -3,7 +3,7 @@ import type { StatusCode } from "hono/utils/http-status";
 
 import postgres from "postgres";
 
-import { INTERNAL_SERVER_ERROR, OK } from "../lib/http-status-codes";
+import { INTERNAL_SERVER_ERROR, OK } from "../constants/http-status-codes";
 
 const onError: ErrorHandler = (err, c) => {
   const currentStatus = "status" in err

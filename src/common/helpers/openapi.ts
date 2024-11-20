@@ -3,7 +3,7 @@ import type { Hook } from "@hono/zod-openapi";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
 
-import { UNPROCESSABLE_ENTITY } from "../lib/http-status-codes";
+import { UNPROCESSABLE_ENTITY } from "../constants/http-status-codes";
 
 /**
  * Default hook for OpenAPI validation errors.

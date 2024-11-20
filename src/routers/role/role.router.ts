@@ -3,7 +3,7 @@ import { createRoute } from "@hono/zod-openapi";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
-import * as HttpStatusCodes from "@/common/lib/http-status-codes";
+import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import checkAuth from "@/common/middlewares/check-auth";
 import { roleSchema } from "@/drizzle/schemas/role";
 import * as handler from "@/routers/role/role.handler";

@@ -1,9 +1,9 @@
 import { createRoute } from "@hono/zod-openapi";
 
+import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
-import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import checkAuth from "@/common/middlewares/check-auth";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/user/user.handler";
