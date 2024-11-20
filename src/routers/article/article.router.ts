@@ -4,6 +4,7 @@ import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema, slugParamsSchema } from "@/common/helpers/schema";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
+import checkAuth from "@/common/middlewares/auth";
 import { articleSchema } from "@/drizzle/schemas/article";
 import * as handler from "@/routers/article/article.handler";
 
@@ -15,6 +16,7 @@ const articleGetRoute = createRoute({
   tags: ["Article"],
   method: "get",
   path: "/article/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },
@@ -31,6 +33,7 @@ const articleListRoute = createRoute({
   tags: ["Article"],
   method: "get",
   path: "/article",
+  security: [{ Bearer: [] }],
   request: {
     query: pageParamsSchema,
   },
@@ -47,6 +50,7 @@ const articleCreateRoute = createRoute({
   tags: ["Article"],
   method: "post",
   path: "/article",
+  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       articleSchema
@@ -72,6 +76,7 @@ const articleUpdateRoute = createRoute({
   tags: ["Article"],
   method: "put",
   path: "/article/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
     body: jsonContent(
@@ -100,6 +105,7 @@ const articleDeleteRoute = createRoute({
   tags: ["Article"],
   method: "delete",
   path: "/article/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },
@@ -116,6 +122,7 @@ const authorArticlesRoute = createRoute({
   tags: ["Article"],
   method: "get",
   path: "/authorArticles",
+  security: [{ Bearer: [] }],
   request: {
     query: z.object({
       author: z.string().pipe(z.coerce.number()),
@@ -135,6 +142,7 @@ const favArticlePostRoute = createRoute({
   tags: ["Article"],
   method: "post",
   path: "/favArticles/{slug}",
+  security: [{ Bearer: [] }],
   request: {
     params: slugParamsSchema,
     body: jsonContent(
@@ -157,6 +165,7 @@ const favArticlesRoute = createRoute({
   tags: ["Article"],
   method: "get",
   path: "/favArticles",
+  security: [{ Bearer: [] }],
   request: {
     query: z.object({
       username: z.string(),
@@ -176,6 +185,7 @@ const favArticleDeleteRoute = createRoute({
   tags: ["Article"],
   method: "delete",
   path: "/favArticles",
+  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       z.object({

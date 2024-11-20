@@ -5,7 +5,7 @@ import { prettyJSON } from "hono/pretty-json";
 
 import { configureOpenAPI } from "@/common/core/configure-openapi";
 import { createApp } from "@/common/core/create-app";
-import { asyncVerifyToken } from "@/common/helpers/util";
+import { verifyToken } from "@/common/helpers/util";
 import env from "@/env";
 import routers from "@/routers";
 
@@ -38,7 +38,7 @@ routers.forEach((router) => {
     .route("/api", router)
     .use(
       bearerAuth({
-        verifyToken: asyncVerifyToken,
+        verifyToken,
       }),
     );
 });

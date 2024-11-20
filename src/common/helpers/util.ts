@@ -105,7 +105,7 @@ function serialize<T extends R | PR>(data: T): T {
 /**
  * 异步校验Token
  */
-export async function asyncVerifyToken(token: string, c: Context<AppEnv>): Promise<boolean> {
+export async function verifyToken(token: string, c: Context<AppEnv>): Promise<boolean> {
   if (!token) {
     throw new Error("未传入Token");
   }

@@ -15,6 +15,7 @@ const taskGetRoute = createRoute({
   tags: ["Task"],
   method: "get",
   path: "/task/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },
@@ -31,6 +32,7 @@ const taskListRoute = createRoute({
   tags: ["Task"],
   method: "get",
   path: "/task",
+  security: [{ Bearer: [] }],
   request: {
     query: pageParamsSchema,
   },
@@ -47,6 +49,7 @@ const taskCreateRoute = createRoute({
   tags: ["Task"],
   method: "post",
   path: "/task",
+  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       taskSchema
@@ -70,6 +73,7 @@ const taskUpdateRoute = createRoute({
   tags: ["Task"],
   method: "put",
   path: "/task/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
     body: jsonContent(
@@ -95,6 +99,7 @@ const taskDeleteRoute = createRoute({
   tags: ["Task"],
   method: "delete",
   path: "/task/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },

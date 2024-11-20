@@ -4,7 +4,7 @@ import { cache } from "hono/cache";
 
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonResponse } from "@/common/helpers/openapi";
-import { asyncVerifyToken } from "@/common/helpers/util";
+import { verifyToken } from "@/common/helpers/util";
 import * as HttpStatusCodes from "@/common/lib/http-status-codes";
 import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/auth/auth.handler";
@@ -69,7 +69,7 @@ const userInfoRoute = createRoute({
   request: {},
   middleware: [
     bearerAuth({
-      verifyToken: asyncVerifyToken,
+      verifyToken,
     }),
     cache({ cacheName: "userInfo" }),
   ] as const, // Use `as const` to ensure TypeScript infers the middleware's Context.

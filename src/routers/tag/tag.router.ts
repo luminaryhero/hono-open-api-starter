@@ -15,6 +15,7 @@ const tagGetRoute = createRoute({
   tags: ["Tag"],
   method: "get",
   path: "/tag/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },
@@ -31,6 +32,7 @@ const tagListRoute = createRoute({
   tags: ["Tag"],
   method: "get",
   path: "/tag",
+  security: [{ Bearer: [] }],
   request: {
     query: pageParamsSchema,
   },
@@ -47,6 +49,7 @@ const tagCreateRoute = createRoute({
   tags: ["Tag"],
   method: "post",
   path: "/tag",
+  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       tagSchema
@@ -68,6 +71,7 @@ const tagUpdateRoute = createRoute({
   tags: ["Tag"],
   method: "put",
   path: "/tag/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
     body: jsonContent(
@@ -91,6 +95,7 @@ const tagDeleteRoute = createRoute({
   tags: ["Tag"],
   method: "delete",
   path: "/tag/{id}",
+  security: [{ Bearer: [] }],
   request: {
     params: idParamsSchema,
   },
