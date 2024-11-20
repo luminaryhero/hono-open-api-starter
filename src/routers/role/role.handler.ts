@@ -97,29 +97,29 @@ export const roleDeleteHandler: AppRouteHandler<RT.RoleDeleteRoute> = async (c) 
  * 分配角色权限
  */
 export const roleAssignPermissionHandler: AppRouteHandler<RT.RoleAssignPermissionRoute> = async (c) => {
-  const { id, permissions } = await c.req.valid("json");
+  const { roleId, permissionIds } = await c.req.valid("json");
 
-  if (permissions.length === 0)
-    throw new Error(`The permissions length is 0,id = ${id}`);
+  if (permissionIds.length === 0)
+    throw new Error(`The permissions length is 0`);
 
   // 查询数据库中的真实权限
   const realPermissions = await db.query.permissionTable.findMany({
-    where: inArray(permissionTable.id, permissions.map(perm => perm.id)),
+    where: inArray(permissionTable.id, permissionIds),
   });
 
   // 准备要插入的数据
-  const roleToPermRows = realPermissions.map(perm => ({ roleId: id, permissionId: perm.id }));
+  const roleToPermRows = realPermissions.map(perm => ({ roleId, permissionId: perm.id }));
 
   // 保存数据
   await db.transaction(async (tx) => {
-    await tx.delete(roleToPermissionTable).where(eq(roleToPermissionTable.roleId, id));
+    await tx.delete(roleToPermissionTable).where(eq(roleToPermissionTable.roleId, roleId));
 
     await tx.insert(roleToPermissionTable).values(roleToPermRows);
   });
 
   // 返回结果
   const result = await db.query.roleTable.findFirst({
-    where: eq(roleTable.id, id),
+    where: eq(roleTable.id, roleId),
     with: {
       permissions: true,
     },

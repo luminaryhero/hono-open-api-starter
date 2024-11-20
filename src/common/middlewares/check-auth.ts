@@ -29,6 +29,7 @@ function checkAuth(options: AuthOptions): MiddlewareHandler {
     }
 
     if (permissions && permissions.length > 0) {
+      console.warn({ permissions, userPermissions });
       // 判断用户权限是否覆盖所需权限集合，不能则抛出异常
       if (_.difference(permissions, userPermissions).length !== 0) {
         throw new HTTPException(401, {

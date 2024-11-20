@@ -5,7 +5,7 @@ import { z } from "zod";
 import { permissionTable } from "./permission";
 import { roleTable } from "./role";
 
-export const roleToPermissionTable = pgTable("role_to_perm_table", {
+export const roleToPermissionTable = pgTable("role_to_permission_table", {
   roleId: integer("role_id")
     .notNull()
     .references(() => roleTable.id, {

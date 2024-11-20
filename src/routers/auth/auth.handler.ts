@@ -7,7 +7,9 @@ import type * as RT from "@/routers/auth/auth.router";
 
 import { successResponse } from "@/common/helpers/util";
 import db from "@/drizzle";
+import { permissionTable } from "@/drizzle/schemas/permission";
 import { roleTable } from "@/drizzle/schemas/role";
+import { roleToPermissionTable } from "@/drizzle/schemas/role-to-permission";
 import { userTable } from "@/drizzle/schemas/user";
 import env from "@/env";
 
@@ -41,14 +43,24 @@ export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
     },
     where: inArray(roleTable.id, roleIds),
   });
-
   const roleNames = roles.map(role => role.name);
 
-  console.log({ roleNames });
+  // 获取权限列表
+  const roleToPermissions = await db.query.roleToPermissionTable.findMany({
+    where: inArray(roleToPermissionTable.roleId, roleIds),
+  });
+  const permissionIds = roleToPermissions.map(permission => permission.permissionId);
+  const permissions = await db.query.permissionTable.findMany({
+    where: inArray(permissionTable.id, permissionIds),
+  });
+  const permissionNames = permissions.map(permission => permission.name);
+
+  console.warn({ roleNames, permissionNames });
   const payload = {
     sub: user.id,
     name: user.username,
     roles: roleNames || ["user"],
+    permissions: permissionNames || [],
     exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
   };
 

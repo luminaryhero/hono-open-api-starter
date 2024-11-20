@@ -4,6 +4,7 @@ import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
 import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
+import checkAuth from "@/common/middlewares/check-auth";
 import { taskSchema } from "@/drizzle/schemas/task";
 import * as handler from "@/routers/task/task.handler";
 
@@ -16,6 +17,9 @@ const taskGetRoute = createRoute({
   method: "get",
   path: "/task/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ permissions: ["task:view"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
   },
@@ -33,6 +37,9 @@ const taskListRoute = createRoute({
   method: "get",
   path: "/task",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ permissions: ["task:view"] }),
+  ] as const,
   request: {
     query: pageParamsSchema,
   },
@@ -50,6 +57,9 @@ const taskCreateRoute = createRoute({
   method: "post",
   path: "/task",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ permissions: ["task:edit"] }),
+  ] as const,
   request: {
     body: jsonContent(
       taskSchema
@@ -74,6 +84,9 @@ const taskUpdateRoute = createRoute({
   method: "put",
   path: "/task/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ permissions: ["task:edit"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
     body: jsonContent(
@@ -100,6 +113,9 @@ const taskDeleteRoute = createRoute({
   method: "delete",
   path: "/task/{id}",
   security: [{ Bearer: [] }],
+  middleware: [
+    checkAuth({ permissions: ["task:delete"] }),
+  ] as const,
   request: {
     params: idParamsSchema,
   },

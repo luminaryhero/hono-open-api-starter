@@ -138,11 +138,10 @@ const roleAssignPermissionRoute = createRoute({
   ] as const,
   request: {
     body: jsonContent(
-      roleSchema
-        .omit({
-          createdAt: true,
-          updatedAt: true,
-        }),
+      z.object({
+        roleId: z.number(),
+        permissionIds: z.array(z.number()),
+      }),
     ),
   },
   responses: {
