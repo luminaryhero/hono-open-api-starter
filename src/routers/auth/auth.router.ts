@@ -9,31 +9,6 @@ import { userSchema } from "@/drizzle/schemas/user";
 import * as handler from "@/routers/auth/auth.handler";
 
 /**
- * 登录
- */
-const loginRoute = createRoute({
-  summary: "登录",
-  tags: ["Auth"],
-  method: "post",
-  path: "/auth/login",
-  request: {
-    body: jsonContent(
-      z.object({
-        username: z.string(),
-        password: z.string(),
-      }),
-    ),
-  },
-  responses: {
-    [HttpStatusCodes.OK]: jsonResponse(
-      z.object({
-        token: z.string(),
-      }),
-    ),
-  },
-});
-
-/**
  * 邮箱登录
  */
 const emailLoginRoute = createRoute({
@@ -158,14 +133,12 @@ const refreshTokenRoute = createRoute({
 
 const router
   = createOpenAPIRouter()
-    .openapi(loginRoute, handler.loginHandler)
     .openapi(emailLoginRoute, handler.emailLoginHandler)
     .openapi(phoneLoginRoute, handler.phoneLoginHandler)
     .openapi(registerRoute, handler.registerHandler)
     .openapi(userInfoRoute, handler.userInfoHandler)
     .openapi(refreshTokenRoute, handler.refreshTokenHandler);
 
-export type LoginRoute = typeof loginRoute;
 export type RegisterRoute = typeof registerRoute;
 export type UserInfoRoute = typeof userInfoRoute;
 export type RefreshTokenRoute = typeof refreshTokenRoute;

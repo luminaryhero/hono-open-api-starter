@@ -13,35 +13,6 @@ import { userTable } from "@/drizzle/schemas/user";
 import env from "@/env";
 
 /**
- * 登录
- */
-export const loginHandler: AppRouteHandler<RT.LoginRoute> = async (c) => {
-  const { username, password } = await c.req.valid("json");
-
-  const user = await db.query.userTable.findFirst({
-    where: eq(userTable.username, username),
-  });
-  if (user === undefined) {
-    throw new Error(`username or password is incorrect`);
-  }
-
-  // 校验用户名和密码是否匹配
-  const isMatch = await bcrypt.compare(password, user?.password);
-  if (!isMatch) {
-    throw new Error(`username or password is incorrect`);
-  }
-
-  // 生成 token
-  const accessToken = await generateToken(username, user.role);
-
-  // 生成refreshToken
-  const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
-  const refreshToken = await generateToken(username, user.role, exp);
-
-  return successResponse(c, { accessToken, refreshToken });
-};
-
-/**
  * 邮箱登录
  */
 export const emailLoginHandler: AppRouteHandler<RT.EmailLoginRoute> = async (c) => {
