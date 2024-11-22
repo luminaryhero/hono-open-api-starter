@@ -1,4 +1,5 @@
 import { bearerAuth } from "hono/bearer-auth";
+import { contextStorage } from "hono/context-storage";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { prettyJSON } from "hono/pretty-json";
@@ -21,7 +22,7 @@ configureOpenAPI(app);
 app.use(pinoLoggerMiddleware);
 
 // 配置全局中间件
-app.use(cors(), prettyJSON());
+app.use(cors(), prettyJSON(), contextStorage());
 
 // 配置不需要权限路由
 app

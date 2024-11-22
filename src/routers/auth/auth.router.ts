@@ -35,6 +35,59 @@ const loginRoute = createRoute({
 });
 
 /**
+ * 邮箱登录
+ */
+const emailLoginRoute = createRoute({
+  summary: "邮箱登录",
+  tags: ["Auth"],
+  method: "post",
+  path: "/auth/emailLogin",
+  request: {
+    body: jsonContent(
+      z.object({
+        email: z.string().email(),
+        password: z.string(),
+      }),
+    ),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(
+      z.object({
+        accessToken: z.string(),
+        refreshToken: z.string(),
+      }),
+    ),
+  },
+});
+
+/**
+ * 手机登录
+ */
+const phoneLoginRoute = createRoute({
+  summary: "手机登录",
+  tags: ["Auth"],
+  method: "post",
+  path: "/auth/phoneLogin",
+  request: {
+    body: jsonContent(
+      z.object({
+        phone: z.string().regex(/^1[3-9]\d{9}$/, "请输入正确的手机号"),
+        password: z.string(),
+        captcha: z.string().length(6).optional(),
+      }),
+    ),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(
+      z.object({
+        accessToken: z.string(),
+        refreshToken: z.string(),
+      }),
+    ),
+  },
+});
+
+/**
  * 注册
  */
 const registerRoute = createRoute({
@@ -47,7 +100,8 @@ const registerRoute = createRoute({
       z.object({
         username: z.string(),
         password: z.string(),
-        email: z.string().email(),
+        phone: z.string().regex(/^1[3-9]\d{9}$/, "请输入正确的手机号"),
+        captcha: z.string().length(6),
       }),
     ),
   },
@@ -80,14 +134,44 @@ const userInfoRoute = createRoute({
   },
 });
 
+/**
+ * 刷新Token
+ */
+const refreshTokenRoute = createRoute({
+  summary: "刷新Token",
+  tags: ["Auth"],
+  method: "post",
+  path: "/auth/refreshToken",
+  request: {
+    body: jsonContent(
+      z.object({
+        refreshToken: z.string(),
+      }),
+    ),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonResponse(
+      z.object({
+        accessToken: z.string(),
+      }),
+    ),
+  },
+});
+
 const router
   = createOpenAPIRouter()
     .openapi(loginRoute, handler.loginHandler)
+    .openapi(emailLoginRoute, handler.emailLoginHandler)
+    .openapi(phoneLoginRoute, handler.phoneLoginHandler)
     .openapi(registerRoute, handler.registerHandler)
-    .openapi(userInfoRoute, handler.userInfoHandler);
+    .openapi(userInfoRoute, handler.userInfoHandler)
+    .openapi(refreshTokenRoute, handler.refreshTokenHandler);
 
 export type LoginRoute = typeof loginRoute;
 export type RegisterRoute = typeof registerRoute;
 export type UserInfoRoute = typeof userInfoRoute;
+export type RefreshTokenRoute = typeof refreshTokenRoute;
+export type EmailLoginRoute = typeof emailLoginRoute;
+export type PhoneLoginRoute = typeof phoneLoginRoute;
 
 export default router;

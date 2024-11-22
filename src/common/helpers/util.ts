@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 
 import { eq } from "drizzle-orm/pg-core/expressions";
-import { verify } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import _ from "lodash";
 
 import { dateFormat } from "@/common/helpers/date";
@@ -114,4 +114,19 @@ export async function verifyToken(token: string, c: Context<AppEnv>): Promise<bo
   c.set("jwtPayload", payload);
 
   return !!user;
+}
+
+/**
+ * 生成Token
+ */
+export async function generateToken(username: string, role?: string | null, exp?: number): Promise<string> {
+  const payload = {
+    sub: username,
+    role: role || "user",
+    exp: exp || Math.floor(Date.now() / 1000) + 60 * 60 * 3, // Token expires in 3 hours
+  };
+
+  // 生成 token
+  const token = await sign(payload, env.JWT_SECRET);
+  return token;
 }

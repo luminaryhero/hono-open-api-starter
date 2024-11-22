@@ -4,12 +4,14 @@ import postgres from "postgres";
 
 import env from "@/env";
 
+import * as captchaSchema from "./schemas/captcha";
 import * as taskSchema from "./schemas/task";
 import * as userSchema from "./schemas/user";
 
 const schema = {
   ...taskSchema,
   ...userSchema,
+  ...captchaSchema,
 };
 
 const logger = new DefaultLogger();
