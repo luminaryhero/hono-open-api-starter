@@ -1,6 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { bearerAuth } from "hono/bearer-auth";
-import { cache } from "hono/cache";
 
 import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
@@ -41,7 +40,7 @@ const emailLoginRoute = createRoute({
   summary: "邮箱登录",
   tags: ["Auth"],
   method: "post",
-  path: "/auth/emailLogin",
+  path: "/auth/login/email",
   request: {
     body: jsonContent(
       z.object({
@@ -67,7 +66,7 @@ const phoneLoginRoute = createRoute({
   summary: "手机登录",
   tags: ["Auth"],
   method: "post",
-  path: "/auth/phoneLogin",
+  path: "/auth/login/phone",
   request: {
     body: jsonContent(
       z.object({
@@ -88,10 +87,10 @@ const phoneLoginRoute = createRoute({
 });
 
 /**
- * 注册
+ * 手机注册
  */
 const registerRoute = createRoute({
-  summary: "注册",
+  summary: "手机注册",
   tags: ["Auth"],
   method: "post",
   path: "/auth/register",
@@ -119,13 +118,12 @@ const userInfoRoute = createRoute({
   summary: "当前用户信息",
   tags: ["Auth"],
   method: "get",
-  path: "/auth/userInfo",
+  path: "/auth/userinfo",
   request: {},
   middleware: [
     bearerAuth({
       verifyToken,
     }),
-    cache({ cacheName: "userInfo" }),
   ] as const, // Use `as const` to ensure TypeScript infers the middleware's Context.
   responses: {
     [HttpStatusCodes.OK]: jsonResponse(

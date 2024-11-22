@@ -121,7 +121,7 @@ export const phoneLoginHandler: AppRouteHandler<RT.PhoneLoginRoute> = async (c) 
 };
 
 /**
- * 注册
+ * 手机注册
  */
 export const registerHandler: AppRouteHandler<RT.RegisterRoute> = async (c) => {
   const { username, password, phone, captcha } = await c.req.valid("json");
