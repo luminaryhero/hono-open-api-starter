@@ -95,6 +95,7 @@ const userInfoRoute = createRoute({
   method: "get",
   path: "/auth/userinfo",
   request: {},
+  security: [{ Bearer: [] }],
   middleware: [
     bearerAuth({
       verifyToken,

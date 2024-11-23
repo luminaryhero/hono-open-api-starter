@@ -1,7 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { and, eq } from "drizzle-orm";
-import { getContext } from "hono/context-storage";
-import { sign, verify } from "hono/jwt";
+import { verify } from "hono/jwt";
 
 import type { AppRouteHandler } from "@/common/types";
 import type * as RT from "@/routers/auth/auth.router";
@@ -145,8 +144,9 @@ export const registerHandler: AppRouteHandler<RT.RegisterRoute> = async (c) => {
 export const userInfoHandler: AppRouteHandler<RT.UserInfoRoute> = async (c) => {
   const payload = c.get("jwtPayload");
 
+  console.log({ payload });
   const user = await db.query.userTable.findFirst({
-    where: eq(userTable.username, payload.name),
+    where: eq(userTable.username, payload.sub),
   });
   if (user === undefined) {
     throw new Error(`The user not found`);

@@ -14,7 +14,7 @@ import type { AppEnv, PR, R } from "../types";
 /**
  * 响应数据分页
  */
-export function paginate(items: any[], page: number = 1, pageSize: number = 10) {
+export function paginate<T>(items: T[], page: number = 1, pageSize: number = 10) {
   return {
     meta: {
       total: items.length,
@@ -29,10 +29,6 @@ export function paginate(items: any[], page: number = 1, pageSize: number = 10) 
  * 统一返回响应数据格式
  */
 export function successResponse(c: Context, data: any): any {
-  if (data == null || undefined) {
-    throw new Error("error");
-  }
-
   const responseData = {
     code: 0,
     data,
@@ -103,7 +99,7 @@ export async function verifyToken(token: string, c: Context<AppEnv>): Promise<bo
 
   const payload = await verify(token, env.JWT_SECRET);
 
-  const username = payload?.name;
+  const username = payload.sub;
   if (typeof username !== "string")
     return false;
 

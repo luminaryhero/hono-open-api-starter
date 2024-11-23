@@ -3,8 +3,6 @@ import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "@/common/constants/http-status-codes";
 import { createOpenAPIRouter } from "@/common/core/create-app";
 import { jsonContent, jsonPageResponse, jsonResponse } from "@/common/helpers/openapi";
-import { idParamsSchema, pageParamsSchema } from "@/common/helpers/schema";
-import checkAuth from "@/common/middlewares/check-auth";
 import { captchaSchema } from "@/drizzle/schemas/captcha";
 import * as handler from "@/routers/captcha/captcha.handler";
 
@@ -16,7 +14,6 @@ const captchaSendRoute = createRoute({
   tags: ["Captcha"],
   method: "post",
   path: "/captcha/send",
-  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       z.object({
@@ -37,7 +34,6 @@ const captchaVerifyRoute = createRoute({
   tags: ["Captcha"],
   method: "post",
   path: "/captcha/verify",
-  security: [{ Bearer: [] }],
   request: {
     body: jsonContent(
       z.object({

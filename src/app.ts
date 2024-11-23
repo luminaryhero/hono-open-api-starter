@@ -1,5 +1,5 @@
 import { bearerAuth } from "hono/bearer-auth";
-import { contextStorage } from "hono/context-storage";
+import { except } from "hono/combine";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { prettyJSON } from "hono/pretty-json";
@@ -11,7 +11,6 @@ import env from "@/env";
 import routers from "@/routers";
 
 import { pinoLoggerMiddleware } from "./common/middlewares/pino-logger";
-import authRouter from "./routers/auth/auth.router";
 
 const app = createApp();
 
@@ -22,26 +21,34 @@ configureOpenAPI(app);
 app.use(pinoLoggerMiddleware);
 
 // 配置全局中间件
-app.use(cors(), prettyJSON(), contextStorage());
+app.use(
+  cors(),
+  prettyJSON(),
+);
 
-// 配置不需要权限路由
-app
-  .route("/api", authRouter)
-  .use(
-    jwt({
-      secret: env.JWT_SECRET,
+// 配置路由
+app.use(
+  "/auth/*",
+  jwt({
+    secret: env.JWT_SECRET,
+  }),
+);
+app.use(
+  "/api/*",
+  except(
+    [
+      "/api/public/*",
+      "/api/auth/*",
+      "/api/captcha/*",
+    ],
+    bearerAuth({
+      verifyToken,
     }),
-  );
+  ),
+);
 
-// 配置权限路由
 routers.forEach((router) => {
-  app
-    .route("/api", router)
-    .use(
-      bearerAuth({
-        verifyToken,
-      }),
-    );
+  app.route("/api", router);
 });
 
 export default app;
