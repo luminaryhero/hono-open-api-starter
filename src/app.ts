@@ -7,10 +7,10 @@ import { configureOpenAPI } from "@/common/core/configure-openapi";
 import { createApp } from "@/common/core/create-app";
 import { verifyToken } from "@/common/helpers/util";
 import env from "@/env";
-import routers from "@/routers";
+import routers from "@/features";
 
 import { pinoLoggerMiddleware } from "./common/middlewares/pino-logger";
-import authRouter from "./routers/auth/auth.router";
+import authRouter from "./features/auth/auth.router";
 
 const app = createApp();
 
